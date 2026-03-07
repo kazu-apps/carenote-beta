@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ケアのて Beta - 家族でつながる介護記録アプリ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Noto Sans JP', 'Inter', -apple-system, sans-serif;
+      background: #f8faf8;
+      color: #1a2e1a;
+      overflow-x: hidden;
+    }
+
+    body.lang-en .jp { display: none; }
+    body:not(.lang-en) .en { display: none; }
+    body.lang-en .jp-inline { display: none; }
+    body:not(.lang-en) .en-inline { display: none; }
+
+    /* Language Toggle */
+    .lang-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 100;
+      background: rgba(255,255,255,0.9);
+      backdrop-filter: blur(10px);
+      border: 1px solid #c8e6c9;
+      border-radius: 24px;
+      padding: 4px;
+      display: flex;
+      gap: 2px;
+    }
+    .lang-toggle button {
+      padding: 6px 16px;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      background: transparent;
+      color: #4a7c59;
+      transition: all 0.2s;
+    }
+    .lang-toggle button.active {
+      background: #2e7d32;
+      color: #fff;
+    }
+
+    /* Hero */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 80px 24px;
+      background: linear-gradient(180deg, #e8f5e9 0%, #f8faf8 100%);
+      position: relative;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(ellipse at 30% 20%, rgba(46,125,50,0.08) 0%, transparent 60%),
+                  radial-gradient(ellipse at 70% 80%, rgba(129,199,132,0.1) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .hero-icon {
+      width: 96px;
+      height: 96px;
+      background: linear-gradient(135deg, #2e7d32, #43a047);
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      margin-bottom: 32px;
+      box-shadow: 0 8px 32px rgba(46,125,50,0.25);
+      position: relative;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 16px;
+      position: relative;
+    }
+    .hero h1 .gradient {
+      background: linear-gradient(135deg, #1b5e20, #43a047);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero .subtitle {
+      font-size: clamp(1rem, 2.5vw, 1.25rem);
+      color: #4a7c59;
+      max-width: 600px;
+      margin-bottom: 40px;
+      line-height: 1.8;
+      position: relative;
+    }
+    .hero .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 36px;
+      background: linear-gradient(135deg, #2e7d32, #388e3c);
+      color: #fff;
+      text-decoration: none;
+      border-radius: 50px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      transition: all 0.3s;
+      box-shadow: 0 4px 20px rgba(46,125,50,0.3);
+      position: relative;
+    }
+    .hero .cta-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(46,125,50,0.4);
+    }
+    .badge {
+      display: inline-block;
+      background: rgba(46,125,50,0.1);
+      color: #2e7d32;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 24px;
+      border: 1px solid rgba(46,125,50,0.2);
+      position: relative;
+    }
+
+    /* Features */
+    .features {
+      padding: 80px 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .features h2 {
+      text-align: center;
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      margin-bottom: 48px;
+      color: #1b5e20;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    .feature-card {
+      background: #fff;
+      border: 1px solid #e8f5e9;
+      border-radius: 16px;
+      padding: 28px;
+      transition: all 0.3s;
+    }
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(46,125,50,0.1);
+      border-color: #a5d6a7;
+    }
+    .feature-card .icon {
+      font-size: 2rem;
+      margin-bottom: 12px;
+    }
+    .feature-card h3 {
+      font-size: 1.1rem;
+      color: #1b5e20;
+      margin-bottom: 8px;
+    }
+    .feature-card p {
+      color: #5a7a5a;
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
+
+    /* Benefits */
+    .benefits {
+      padding: 80px 24px;
+      background: linear-gradient(180deg, #f8faf8, #e8f5e9);
+    }
+    .benefits-inner {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    .benefits h2 {
+      text-align: center;
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      margin-bottom: 40px;
+      color: #1b5e20;
+    }
+    .benefit-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 24px;
+      background: #fff;
+      padding: 24px;
+      border-radius: 14px;
+      border: 1px solid #c8e6c9;
+    }
+    .benefit-item .check {
+      width: 36px;
+      height: 36px;
+      background: #e8f5e9;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+      color: #2e7d32;
+    }
+    .benefit-item h3 {
+      font-size: 1rem;
+      color: #1b5e20;
+      margin-bottom: 4px;
+    }
+    .benefit-item p {
+      color: #5a7a5a;
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    /* How to Join */
+    .how-to {
+      padding: 80px 24px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .how-to h2 {
+      text-align: center;
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      margin-bottom: 48px;
+      color: #1b5e20;
+    }
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .step {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+    }
+    .step-num {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, #2e7d32, #43a047);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1.2rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .step-content h3 {
+      font-size: 1.1rem;
+      color: #1b5e20;
+      margin-bottom: 4px;
+    }
+    .step-content p {
+      color: #5a7a5a;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+    .step-content code {
+      background: #e8f5e9;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      color: #2e7d32;
+    }
+
+    /* Final CTA */
+    .final-cta {
+      padding: 80px 24px;
+      text-align: center;
+      background: linear-gradient(180deg, #e8f5e9, #f8faf8);
+    }
+    .final-cta h2 {
+      font-size: clamp(1.3rem, 3vw, 1.8rem);
+      color: #1b5e20;
+      margin-bottom: 12px;
+    }
+    .final-cta .counter {
+      color: #4a7c59;
+      font-size: 1rem;
+      margin-bottom: 32px;
+    }
+    .final-cta .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 36px;
+      background: linear-gradient(135deg, #2e7d32, #388e3c);
+      color: #fff;
+      text-decoration: none;
+      border-radius: 50px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      transition: all 0.3s;
+      box-shadow: 0 4px 20px rgba(46,125,50,0.3);
+    }
+    .final-cta .cta-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(46,125,50,0.4);
+    }
+
+    /* Footer */
+    footer {
+      padding: 40px 24px;
+      text-align: center;
+      color: #7a9a7a;
+      font-size: 0.85rem;
+    }
+    footer a {
+      color: #4a7c59;
+      text-decoration: none;
+    }
+    footer a:hover { text-decoration: underline; }
+
+    @media (max-width: 600px) {
+      .features-grid { grid-template-columns: 1fr; }
+      .hero { padding: 60px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="lang-toggle">
+  <button class="active" id="btn-ja" onclick="toggleLang()">JP</button>
+  <button id="btn-en" onclick="toggleLang()">EN</button>
+</div>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-icon">&#x1F91D;</div>
+  <div class="badge">
+    <span class="jp">&#x1F4F1; Android Beta Tester &#x52DF;&#x96C6;&#x4E2D;</span>
+    <span class="en">&#x1F4F1; Looking for Android Beta Testers</span>
+  </div>
+  <h1>
+    <span class="jp"><span class="gradient">&#x5BB6;&#x65CF;&#x3067;&#x3064;&#x306A;&#x304C;&#x308B;&#x3001;</span><br><span class="gradient">&#x4ECB;&#x8B77;&#x306E;&#x8A18;&#x9332;&#x30A2;&#x30D7;&#x30EA;</span></span>
+    <span class="en"><span class="gradient">Care Together.</span><br><span class="gradient">Record Everything.</span></span>
+  </h1>
+  <p class="subtitle">
+    <span class="jp">&#x670D;&#x85AC;&#x7BA1;&#x7406;&#x3001;&#x5065;&#x5EB7;&#x8A18;&#x9332;&#x3001;&#x4E88;&#x5B9A;&#x3001;&#x30BF;&#x30B9;&#x30AF;&#x3001;&#x7533;&#x3057;&#x9001;&#x308A;&#x2015;&#x2015;<br>&#x5BB6;&#x65CF;&#x307F;&#x3093;&#x306A;&#x3067;&#x5171;&#x6709;&#x3067;&#x304D;&#x308B;&#x4ECB;&#x8B77;&#x8A18;&#x9332;&#x30A2;&#x30D7;&#x30EA;&#x300C;&#x30B1;&#x30A2;&#x306E;&#x3066;&#x300D;</span>
+    <span class="en">Medication tracking, health records, schedules, tasks, and care notes&#x2014;<br>a family care recording app that keeps everyone connected.</span>
+  </p>
+  <a class="cta-btn" id="cta-hero"
+     href="https://mail.google.com/mail/?view=cm&to=support-carenote@ks-apps.org&su=Beta%20Tester%E5%8F%82%E5%8A%A0%E5%B8%8C%E6%9C%9B&body=Beta%E3%83%86%E3%82%B9%E3%82%BF%E3%83%BC%E3%81%AB%E5%8F%82%E5%8A%A0%E5%B8%8C%E6%9C%9B%E3%81%97%E3%81%BE%E3%81%99%E3%80%82%0A%0AGmail%E3%82%A2%E3%83%89%E3%83%AC%E3%82%B9%3A%20"
+     target="_blank" rel="noopener">
+    <span class="jp">&#x2709;&#xFE0F; Beta&#x30C6;&#x30B9;&#x30BF;&#x30FC;&#x306B;&#x53C2;&#x52A0;&#x3059;&#x308B;</span>
+    <span class="en">&#x2709;&#xFE0F; Join the Beta Test</span>
+  </a>
+</section>
+
+<!-- Features -->
+<section class="features">
+  <h2>
+    <span class="jp">&#x2728; &#x4E3B;&#x306A;&#x6A5F;&#x80FD;</span>
+    <span class="en">&#x2728; Key Features</span>
+  </h2>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="icon">&#x1F48A;</div>
+      <h3>
+        <span class="jp">&#x670D;&#x85AC;&#x7BA1;&#x7406;</span>
+        <span class="en">Medication Management</span>
+      </h3>
+      <p>
+        <span class="jp">&#x85AC;&#x306E;&#x767B;&#x9332;&#x3001;&#x30EA;&#x30DE;&#x30A4;&#x30F3;&#x30C0;&#x30FC;&#x901A;&#x77E5;&#x3001;&#x670D;&#x85AC;&#x8A18;&#x9332;&#x3002;&#x98F2;&#x3093;&#x3060;&#x30FB;&#x98F2;&#x3081;&#x306A;&#x304B;&#x3063;&#x305F;&#x30FB;&#x5F8C;&#x3067;&#x901A;&#x77E5;&#x306E;3&#x3064;&#x304B;&#x3089;&#x9078;&#x3076;&#x3060;&#x3051;&#x3002;&#x5199;&#x771F;&#x3082;&#x6DFB;&#x4ED8;&#x53EF;&#x80FD;&#x3002;</span>
+        <span class="en">Register medications, get reminders, and record intake. Simple 3-choice recording: taken, skipped, or remind later. Photo attachment supported.</span>
+      </p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">&#x1F321;&#xFE0F;</div>
+      <h3>
+        <span class="jp">&#x5065;&#x5EB7;&#x8A18;&#x9332;</span>
+        <span class="en">Health Records</span>
+      </h3>
+      <p>
+        <span class="jp">&#x4F53;&#x6E29;&#x3001;&#x8840;&#x5727;&#x3001;&#x8108;&#x62CD;&#x3001;&#x4F53;&#x91CD;&#x3001;&#x98DF;&#x4E8B;&#x91CF;&#x3001;&#x6392;&#x6CC4;&#x3001;&#x4F53;&#x8ABF;&#x30E1;&#x30E2;&#x3002;&#x8A18;&#x9332;&#x3057;&#x305F;&#x3044;&#x9805;&#x76EE;&#x3060;&#x3051;&#x3067;OK&#x3002;&#x30B0;&#x30E9;&#x30D5;&#x3067;&#x5909;&#x5316;&#x304C;&#x898B;&#x3048;&#x308B;&#x3002;</span>
+        <span class="en">Temperature, blood pressure, pulse, weight, meals, excretion, and condition notes. Record only what you need. Track changes with graphs.</span>
+      </p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">&#x1F4C5;</div>
+      <h3>
+        <span class="jp">&#x30AB;&#x30EC;&#x30F3;&#x30C0;&#x30FC;</span>
+        <span class="en">Calendar</span>
+      </h3>
+      <p>
+        <span class="jp">&#x901A;&#x9662;&#x3001;&#x8A2A;&#x554F;&#x770B;&#x8B77;&#x3001;&#x30C7;&#x30A4;&#x30B5;&#x30FC;&#x30D3;&#x30B9;&#x306A;&#x3069;&#x306E;&#x4E88;&#x5B9A;&#x3092;&#x4E00;&#x5143;&#x7BA1;&#x7406;&#x3002;&#x7E70;&#x308A;&#x8FD4;&#x3057;&#x8A2D;&#x5B9A;&#x3084;&#x62C5;&#x5F53;&#x8005;&#x30A2;&#x30B5;&#x30A4;&#x30F3;&#x3082;&#x53EF;&#x80FD;&#x3002;</span>
+        <span class="en">Manage hospital visits, home nursing, day services, and more in one place. Supports recurring events and assignees.</span>
+      </p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">&#x2705;</div>
+      <h3>
+        <span class="jp">&#x30BF;&#x30B9;&#x30AF;&#x7BA1;&#x7406;</span>
+        <span class="en">Task Management</span>
+      </h3>
+      <p>
+        <span class="jp">&#x300C;&#x85AC;&#x3092;&#x53D7;&#x3051;&#x53D6;&#x308B;&#x300D;&#x300C;&#x30B7;&#x30FC;&#x30C4;&#x4EA4;&#x63DB;&#x300D;&#x306A;&#x3069;&#x3001;&#x5BB6;&#x65CF;&#x3067;&#x5206;&#x62C5;&#x3002;&#x62C5;&#x5F53;&#x8005;&#x3092;&#x6C7A;&#x3081;&#x3066;&#x3001;&#x5B8C;&#x4E86;&#x3057;&#x305F;&#x3089;&#x5199;&#x771F;&#x3067;&#x5831;&#x544A;&#x3002;</span>
+        <span class="en">Share tasks like picking up prescriptions or changing sheets among family. Assign responsibilities and report completion with photos.</span>
+      </p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">&#x1F4DD;</div>
+      <h3>
+        <span class="jp">&#x30E1;&#x30E2;&#x30FB;&#x7533;&#x3057;&#x9001;&#x308A;</span>
+        <span class="en">Care Notes</span>
+      </h3>
+      <p>
+        <span class="jp">&#x6C17;&#x3065;&#x3044;&#x305F;&#x3053;&#x3068;&#x3092;&#x5199;&#x771F;&#x4ED8;&#x304D;&#x3067;&#x5171;&#x6709;&#x3002;&#x30BF;&#x30B0;&#x4ED8;&#x3051;&#x3001;&#x30B3;&#x30E1;&#x30F3;&#x30C8;&#x6A5F;&#x80FD;&#x3067;&#x5BB6;&#x65CF;&#x9593;&#x306E;&#x7533;&#x3057;&#x9001;&#x308A;&#x306B;&#x3002;</span>
+        <span class="en">Share observations with photos. Use tags and comments for seamless family communication and care handoffs.</span>
+      </p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">&#x1F46A;</div>
+      <h3>
+        <span class="jp">&#x5BB6;&#x65CF;&#x5171;&#x6709;</span>
+        <span class="en">Family Sharing</span>
+      </h3>
+      <p>
+        <span class="jp">&#x5BB6;&#x65CF;&#x30E1;&#x30F3;&#x30D0;&#x30FC;&#x3092;&#x62DB;&#x5F85;&#x3057;&#x3066;&#x5168;&#x54E1;&#x3067;&#x8A18;&#x9332;&#x3092;&#x5171;&#x6709;&#x3002;&#x8A2A;&#x554F;&#x770B;&#x8B77;&#x5E2B;&#x306A;&#x3069;&#x5916;&#x90E8;&#x30B9;&#x30BF;&#x30C3;&#x30D5;&#x306E;&#x62DB;&#x5F85;&#x3082;&#x5BFE;&#x5FDC;&#x3002;</span>
+        <span class="en">Invite family members to share all records. External staff (home nurses, etc.) can also be invited with limited permissions.</span>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- Benefits -->
+<section class="benefits">
+  <div class="benefits-inner">
+    <h2>
+      <span class="jp">&#x1F381; Beta&#x30C6;&#x30B9;&#x30BF;&#x30FC;&#x7279;&#x5178;</span>
+      <span class="en">&#x1F381; Beta Tester Benefits</span>
+    </h2>
+    <div class="benefit-item">
+      <div class="check">&#x2B50;</div>
+      <div>
+        <h3>
+          <span class="jp">&#x30D7;&#x30EC;&#x30DF;&#x30A2;&#x30E0;&#x7121;&#x6599;</span>
+          <span class="en">Free Premium</span>
+        </h3>
+        <p>
+          <span class="jp">Beta&#x671F;&#x9593;&#x4E2D;&#x306F;&#x5168;&#x3066;&#x306E;&#x30D7;&#x30EC;&#x30DF;&#x30A2;&#x30E0;&#x6A5F;&#x80FD;&#xFF08;&#x7121;&#x5236;&#x9650;&#x30C7;&#x30FC;&#x30BF;&#x4FDD;&#x5B58;&#x3001;PDF&#x51FA;&#x529B;&#x3001;&#x5916;&#x90E8;&#x30AB;&#x30EC;&#x30F3;&#x30C0;&#x30FC;&#x540C;&#x671F;&#x7B49;&#xFF09;&#x304C;&#x7121;&#x6599;&#x3067;&#x4F7F;&#x3048;&#x307E;&#x3059;&#x3002;</span>
+          <span class="en">All premium features (unlimited data retention, PDF export, external calendar sync, etc.) are free during the beta period.</span>
+        </p>
+      </div>
+    </div>
+    <div class="benefit-item">
+      <div class="check">&#x1F6E0;&#xFE0F;</div>
+      <div>
+        <h3>
+          <span class="jp">&#x958B;&#x767A;&#x306B;&#x53C2;&#x52A0;</span>
+          <span class="en">Shape the Product</span>
+        </h3>
+        <p>
+          <span class="jp">&#x3042;&#x306A;&#x305F;&#x306E;&#x30D5;&#x30A3;&#x30FC;&#x30C9;&#x30D0;&#x30C3;&#x30AF;&#x304C;&#x76F4;&#x63A5;&#x6A5F;&#x80FD;&#x306B;&#x53CD;&#x6620;&#x3055;&#x308C;&#x307E;&#x3059;&#x3002;&#x4ECB;&#x8B77;&#x306E;&#x73FE;&#x5834;&#x3067;&#x672C;&#x5F53;&#x306B;&#x5F79;&#x7ACB;&#x3064;&#x30A2;&#x30D7;&#x30EA;&#x3092;&#x4E00;&#x7DD2;&#x306B;&#x4F5C;&#x308A;&#x307E;&#x3057;&#x3087;&#x3046;&#x3002;</span>
+          <span class="en">Your feedback directly influences what gets built. Help us create an app that truly serves real caregiving needs.</span>
+        </p>
+      </div>
+    </div>
+    <div class="benefit-item">
+      <div class="check">&#x1F4AC;</div>
+      <div>
+        <h3>
+          <span class="jp">&#x958B;&#x767A;&#x8005;&#x3068;&#x76F4;&#x63A5;&#x9023;&#x7D61;</span>
+          <span class="en">Direct Developer Contact</span>
+        </h3>
+        <p>
+          <span class="jp">&#x500B;&#x4EBA;&#x958B;&#x767A;&#x306A;&#x306E;&#x3067;&#x3001;&#x958B;&#x767A;&#x8005;&#x3068;&#x76F4;&#x63A5;&#x3084;&#x308A;&#x53D6;&#x308A;&#x3067;&#x304D;&#x307E;&#x3059;&#x3002;&#x4E0D;&#x5177;&#x5408;&#x5831;&#x544A;&#x3084;&#x8981;&#x671B;&#x3082;&#x3059;&#x3050;&#x306B;&#x5BFE;&#x5FDC;&#x3002;</span>
+          <span class="en">As a solo developer, I communicate directly with testers. Bug reports and feature requests get immediate attention.</span>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- How to Join -->
+<section class="how-to">
+  <h2>
+    <span class="jp">&#x1F680; &#x53C2;&#x52A0;&#x65B9;&#x6CD5;</span>
+    <span class="en">&#x1F680; How to Join</span>
+  </h2>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h3>
+          <span class="jp">Gmail&#x30A2;&#x30C9;&#x30EC;&#x30B9;&#x3092;&#x9001;&#x4FE1;</span>
+          <span class="en">Send Your Gmail Address</span>
+        </h3>
+        <p>
+          <span class="jp"><code>support-carenote@ks-apps.org</code> &#x306B;Gmail&#x30A2;&#x30C9;&#x30EC;&#x30B9;&#x3092;&#x304A;&#x9001;&#x308A;&#x304F;&#x3060;&#x3055;&#x3044;&#x3002;</span>
+          <span class="en">Email your Gmail address to <code>support-carenote@ks-apps.org</code></span>
+        </p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h3>
+          <span class="jp">&#x62DB;&#x5F85;&#x3092;&#x53D7;&#x3051;&#x53D6;&#x308B;</span>
+          <span class="en">Receive Your Invite</span>
+        </h3>
+        <p>
+          <span class="jp">24&#x6642;&#x9593;&#x4EE5;&#x5185;&#x306B;Google Play&#x306E;Beta&#x30C6;&#x30B9;&#x30C8;&#x3078;&#x306E;&#x62DB;&#x5F85;&#x3092;&#x304A;&#x9001;&#x308A;&#x3057;&#x307E;&#x3059;&#x3002;</span>
+          <span class="en">You'll receive an invitation to the Google Play beta test within 24 hours.</span>
+        </p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <h3>
+          <span class="jp">&#x30A4;&#x30F3;&#x30B9;&#x30C8;&#x30FC;&#x30EB; &amp; &#x30D5;&#x30A3;&#x30FC;&#x30C9;&#x30D0;&#x30C3;&#x30AF;</span>
+          <span class="en">Install &amp; Give Feedback</span>
+        </h3>
+        <p>
+          <span class="jp">&#x30A2;&#x30D7;&#x30EA;&#x3092;&#x30A4;&#x30F3;&#x30B9;&#x30C8;&#x30FC;&#x30EB;&#x3057;&#x3066;&#x3001;&#x65E5;&#x3005;&#x306E;&#x4ECB;&#x8B77;&#x8A18;&#x9332;&#x306B;&#x304A;&#x4F7F;&#x3044;&#x304F;&#x3060;&#x3055;&#x3044;&#x3002;&#x30D5;&#x30A3;&#x30FC;&#x30C9;&#x30D0;&#x30C3;&#x30AF;&#x3092;&#x304A;&#x5F85;&#x3061;&#x3057;&#x3066;&#x3044;&#x307E;&#x3059;&#xFF01;</span>
+          <span class="en">Install the app and use it for your daily care recording. We look forward to your feedback!</span>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Final CTA -->
+<section class="final-cta">
+  <h2>
+    <span class="jp">&#x4E00;&#x7DD2;&#x306B;&#x3001;&#x4ECB;&#x8B77;&#x3092;&#x3082;&#x3063;&#x3068;&#x3089;&#x304F;&#x306B;&#x3002;</span>
+    <span class="en">Let's make caregiving easier, together.</span>
+  </h2>
+  <p class="counter">
+    <span class="jp">&#x1F4E3; Beta&#x30C6;&#x30B9;&#x30BF;&#x30FC; 20&#x540D;&#x52DF;&#x96C6;&#x4E2D;</span>
+    <span class="en">&#x1F4E3; Looking for 20 beta testers</span>
+  </p>
+  <a class="cta-btn" id="cta-bottom"
+     href="https://mail.google.com/mail/?view=cm&to=support-carenote@ks-apps.org&su=Beta%20Tester%E5%8F%82%E5%8A%A0%E5%B8%8C%E6%9C%9B&body=Beta%E3%83%86%E3%82%B9%E3%82%BF%E3%83%BC%E3%81%AB%E5%8F%82%E5%8A%A0%E5%B8%8C%E6%9C%9B%E3%81%97%E3%81%BE%E3%81%99%E3%80%82%0A%0AGmail%E3%82%A2%E3%83%89%E3%83%AC%E3%82%B9%3A%20"
+     target="_blank" rel="noopener">
+    <span class="jp">&#x2709;&#xFE0F; Beta&#x30C6;&#x30B9;&#x30BF;&#x30FC;&#x306B;&#x53C2;&#x52A0;&#x3059;&#x308B;</span>
+    <span class="en">&#x2709;&#xFE0F; Join the Beta Test</span>
+  </a>
+</section>
+
+<footer>
+  <p>&copy; 2026 CareNote</p>
+  <p><a href="mailto:support-carenote@ks-apps.org">support-carenote@ks-apps.org</a></p>
+</footer>
+
+<script>
+function toggleLang() {
+  document.body.classList.toggle('lang-en');
+  document.getElementById('btn-ja').classList.toggle('active');
+  document.getElementById('btn-en').classList.toggle('active');
+}
+
+(function() {
+  var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  if (isMobile) {
+    var mailtoHref = 'mailto:support-carenote@ks-apps.org?subject=Beta%20Tester%E5%8F%82%E5%8A%A0%E5%B8%8C%E6%9C%9B&body=Beta%E3%83%86%E3%82%B9%E3%82%BF%E3%83%BC%E3%81%AB%E5%8F%82%E5%8A%A0%E5%B8%8C%E6%9C%9B%E3%81%97%E3%81%BE%E3%81%99%E3%80%82%0A%0AGmail%E3%82%A2%E3%83%89%E3%83%AC%E3%82%B9%3A%20';
+    document.getElementById('cta-hero').href = mailtoHref;
+    document.getElementById('cta-bottom').href = mailtoHref;
+  }
+})();
+</script>
+
+</body>
+</html>
