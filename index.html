@@ -565,20 +565,34 @@
 </footer>
 
 <script>
+var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+var emailUrls = {
+  ja: {
+    gmail: 'https://mail.google.com/mail/?view=cm&to=support-carenote@ks-apps.org&su=Beta%20Tester%E5%8F%82%E5%8A%A0%E5%B8%8C%E6%9C%9B&body=Beta%E3%83%86%E3%82%B9%E3%82%BF%E3%83%BC%E3%81%AB%E5%8F%82%E5%8A%A0%E5%B8%8C%E6%9C%9B%E3%81%97%E3%81%BE%E3%81%99%E3%80%82%0A%0AGmail%E3%82%A2%E3%83%89%E3%83%AC%E3%82%B9%3A%20',
+    mailto: 'mailto:support-carenote@ks-apps.org?subject=Beta%20Tester%E5%8F%82%E5%8A%A0%E5%B8%8C%E6%9C%9B&body=Beta%E3%83%86%E3%82%B9%E3%82%BF%E3%83%BC%E3%81%AB%E5%8F%82%E5%8A%A0%E5%B8%8C%E6%9C%9B%E3%81%97%E3%81%BE%E3%81%99%E3%80%82%0A%0AGmail%E3%82%A2%E3%83%89%E3%83%AC%E3%82%B9%3A%20'
+  },
+  en: {
+    gmail: 'https://mail.google.com/mail/?view=cm&to=support-carenote@ks-apps.org&su=CareNote%20Beta%20Tester%20Signup&body=Hi!%20I%27d%20like%20to%20join%20the%20CareNote%20beta%20test.%0A%0AMy%20Gmail%20address%20for%20Google%20Play%3A%20',
+    mailto: 'mailto:support-carenote@ks-apps.org?subject=CareNote%20Beta%20Tester%20Signup&body=Hi!%20I%27d%20like%20to%20join%20the%20CareNote%20beta%20test.%0A%0AMy%20Gmail%20address%20for%20Google%20Play%3A%20'
+  }
+};
+
+function updateCtaLinks() {
+  var isEn = document.body.classList.contains('lang-en');
+  var lang = isEn ? 'en' : 'ja';
+  var href = isMobile ? emailUrls[lang].mailto : emailUrls[lang].gmail;
+  document.getElementById('cta-hero').href = href;
+  document.getElementById('cta-bottom').href = href;
+}
+
 function toggleLang() {
   document.body.classList.toggle('lang-en');
   document.getElementById('btn-ja').classList.toggle('active');
   document.getElementById('btn-en').classList.toggle('active');
+  updateCtaLinks();
 }
 
-(function() {
-  var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-  if (isMobile) {
-    var mailtoHref = 'mailto:support-carenote@ks-apps.org?subject=Beta%20Tester%E5%8F%82%E5%8A%A0%E5%B8%8C%E6%9C%9B&body=Beta%E3%83%86%E3%82%B9%E3%82%BF%E3%83%BC%E3%81%AB%E5%8F%82%E5%8A%A0%E5%B8%8C%E6%9C%9B%E3%81%97%E3%81%BE%E3%81%99%E3%80%82%0A%0AGmail%E3%82%A2%E3%83%89%E3%83%AC%E3%82%B9%3A%20';
-    document.getElementById('cta-hero').href = mailtoHref;
-    document.getElementById('cta-bottom').href = mailtoHref;
-  }
-})();
+updateCtaLinks();
 </script>
 
 </body>
