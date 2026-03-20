@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareNote - Screenshot Gallery</title>
+<style>
+  :root {
+    --primary: #1a73e8;
+    --primary-light: #e8f0fe;
+    --surface: #ffffff;
+    --bg: #f8f9fa;
+    --text: #202124;
+    --text-secondary: #5f6368;
+    --border: #dadce0;
+    --radius: 12px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.08);
+    --shadow-hover: 0 4px 12px rgba(0,0,0,0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans JP', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 2rem 1rem;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  header h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 0.25rem;
+  }
+
+  header p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+  }
+
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  nav a {
+    padding: 0.35rem 0.85rem;
+    border-radius: 20px;
+    background: var(--primary-light);
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+
+  nav a:hover {
+    background: var(--primary);
+    color: #fff;
+  }
+
+  main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+  }
+
+  .section {
+    margin-bottom: 3rem;
+  }
+
+  .section h2 {
+    font-size: 1.35rem;
+    font-weight: 600;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--primary);
+    display: inline-block;
+  }
+
+  .screenshot-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .screenshot-pair {
+    background: var(--surface);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    transition: box-shadow 0.2s;
+  }
+
+  .screenshot-pair:hover {
+    box-shadow: var(--shadow-hover);
+  }
+
+  .pair-title {
+    padding: 0.75rem 1rem;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--text);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .pair-images {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+
+  .img-wrapper {
+    position: relative;
+    padding: 0.75rem;
+  }
+
+  .img-wrapper:first-child {
+    background: #f8f9fa;
+    border-right: 1px solid var(--border);
+  }
+
+  .img-wrapper:last-child {
+    background: #303134;
+  }
+
+  .img-wrapper img {
+    width: 100%;
+    height: auto;
+    border-radius: 6px;
+    display: block;
+    cursor: pointer;
+  }
+
+  .mode-label {
+    position: absolute;
+    top: 0.35rem;
+    right: 0.5rem;
+    font-size: 0.6rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.15rem 0.4rem;
+    border-radius: 4px;
+  }
+
+  .img-wrapper:first-child .mode-label {
+    background: rgba(0,0,0,0.06);
+    color: var(--text-secondary);
+  }
+
+  .img-wrapper:last-child .mode-label {
+    background: rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.7);
+  }
+
+  /* Lightbox */
+  .lightbox {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.85);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  .lightbox.active {
+    display: flex;
+  }
+
+  .lightbox img {
+    max-width: 90%;
+    max-height: 90vh;
+    border-radius: 8px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  }
+
+  footer {
+    text-align: center;
+    padding: 2rem 1rem;
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    border-top: 1px solid var(--border);
+  }
+
+  footer a { color: var(--primary); text-decoration: none; }
+
+  @media (max-width: 600px) {
+    .screenshot-grid {
+      grid-template-columns: 1fr;
+    }
+    header h1 { font-size: 1.35rem; }
+    nav a { font-size: 0.7rem; padding: 0.25rem 0.65rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>CareNote</h1>
+  <p>家族でつながる介護記録 - Screenshot Gallery</p>
+  <nav>
+    <a href="#onboarding">Onboarding</a>
+    <a href="#auth">Auth</a>
+    <a href="#home">Home</a>
+    <a href="#calendar">Calendar</a>
+    <a href="#medication">Medication</a>
+    <a href="#tasks">Tasks</a>
+    <a href="#notes">Notes</a>
+    <a href="#healthrecords">Health Records</a>
+    <a href="#search">Search</a>
+    <a href="#settings">Settings</a>
+    <a href="#carerecipient">Care Recipient</a>
+  </nav>
+</header>
+
+<main>
+
+  <!-- Onboarding -->
+  <div class="section" id="onboarding">
+    <h2>Onboarding</h2>
+    <div class="screenshot-grid">
+      <div class="screenshot-pair">
+        <div class="pair-title">Welcome Screen</div>
+        <div class="pair-images">
+          <div class="img-wrapper">
+            <span class="mode-label">Light</span>
+            <img src="screenshots/com.carenote.app.ui.screens.onboarding.OnboardingWelcomeScreenKt.OnboardingWelcomeScreenPreview.Light_WITH_BACKGROUND_DAY.png" alt="Welcome - Light" loading="lazy">
+          </div>
+          <div class="img-wrapper">
+            <span class="mode-label">Dark</span>
+            <img src="screenshots/com.carenote.app.ui.screens.onboarding.OnboardingWelcomeScreenKt.OnboardingWelcomeScreenPreview.Dark_WITH_BACKGROUND_NIGHT.png" alt="Welcome - Dark" loading="lazy">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Auth -->
+  <div class="section" id="auth">
+    <h2>Auth</h2>
+    <div class="screenshot-grid">
+      <div class="screenshot-pair">
+        <div class="pair-title">Login</div>
+        <div class="pair-images">
+          <div class="img-wrapper">
+            <span class="mode-label">Light</span>
+            <img src="screenshots/com.carenote.app.ui.screens.auth.LoginScreenKt.LoginContentPreview.Light_WITH_BACKGROUND_DAY.png" alt="Login - Light" loading="lazy">
+          </div>
+          <div class="img-wrapper">
+            <span class="mode-label">Dark</span>
+            <img src="screenshots/com.carenote.app.ui.screens.auth.LoginScreenKt.LoginContentPreview.Dark_WITH_BACKGROUND_NIGHT.png" alt="Login - Dark" loading="lazy">
+          </div>
+        </div>
+      </div>
+      <div class="screenshot-pair">
+        <div class="pair-title">Register</div>
+        <div class="pair-images">
+          <div class="img-wrapper">
+            <span class="mode-label">Light</span>
+            <img src="screenshots/com.carenote.app.ui.screens.auth.RegisterScreenKt.RegisterContentPreview.Light_WITH_BACKGROUND_DAY.png" alt="Register - Light" loading="lazy">
+          </div>
+          <div class="img-wrapper">
+            <span class="mode-label">Dark</span>
+            <img src="screenshots/com.carenote.app.ui.screens.auth.RegisterScreenKt.RegisterContentPreview.Dark_WITH_BACKGROUND_NIGHT.png" alt="Register - Dark" loading="lazy">
+          </div>
+        </div>
+      </div>
+      <div class="screenshot-pair">
+        <div class="pair-title">Password Reset Form</div>
+        <div class="pair-images">
+          <div class="img-wrapper">
+            <span class="mode-label">Light</span>
+            <img src="screenshots/com.carenote.app.ui.screens.auth.ForgotPasswordScreenKt.ResetFormContentPreview.Light_WITH_BACKGROUND_DAY.png" alt="Reset Form - Light" loading="lazy">
+          </div>
+          <div class="img-wrapper">
+            <span class="mode-label">Dark</span>
+            <img src="screenshots/com.carenote.app.ui.screens.auth.ForgotPasswordScreenKt.ResetFormContentPreview.Dark_WITH_BACKGROUND_NIGHT.png" alt="Reset Form - Dark" loading="lazy">
+          </div>
+        </div>
+      </div>
+      <div class="screenshot-pair">
+        <div class="pair-title">Email Sent Confirmation</div>
+        <div class="pair-images">
+          <div class="img-wrapper">
+            <span class="mode-label">Light</span>
+            <img src="screenshots/com.carenote.app.ui.screens.auth.ForgotPasswordScreenKt.EmailSentContentPreview.Light_WITH_BACKGROUND_DAY.png" alt="Email Sent - Light" loading="lazy">
+          </div>
+          <div class="img-wrapper">
+            <span class="mode-label">Dark</span>
+            <img src="screenshots/com.carenote.app.ui.screens.auth.ForgotPasswordScreenKt.EmailSentContentPreview.Dark_WITH_BACKGROUND_NIGHT.png" alt="Email Sent - Dark" loading="lazy">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Home -->
+  <div class="section" id="home">
+    <h2>Home</h2>
+    <div class="screenshot-grid">
+      <div class="screenshot-pair">
+        <div class="pair-title">Home Content</div>
+        <div class="pair-images">
+          <div class="img-wrapper">
+            <span class="mode-label">Light</span>
+            <img src="screenshots/com.carenote.app.ui.screens.home.HomeScreenKt.HomeContentPreview.Light_WITH_BACKGROUND_DAY.png" alt="Home - Light" loading="lazy">
+          </div>
+          <div class="img-wrapper">
+            <span class="mode-label">Dark</span>
+            <img src="screenshots/com.carenote.app.ui.screens.home.HomeScreenKt.HomeContentPreview.Dark_WITH_BACKGROUND_NIGHT.png" alt="Home - Dark" loading="lazy">
+          </div>
+        </div>
+      </div>
+      <div class="screenshot-pair">
+        <div class="pair-title">Calendar Event Item</div>
+        <div class="pair-images">
+          <div class="img-wrapper">
+            <span class="mode-label">Light</span>
+            <img src="screenshots/com.carenote.app.ui.screens.home.HomeScreenKt.CalendarEventItemPreview.Light_WITH_BACKGROUND_DAY.png" alt="Calendar Event - Light" loading="lazy">
+          </div>
+          <div class="img-wrapper">
+            <span class="mode-label">Dark</span>
+            <img src="screenshots/com.carenote.app.ui.screens.home.HomeScreenKt.CalendarEventItemPreview.Dark_WITH_BACKGROUND_NIGHT.png" alt="Calendar Event - Dark" loading="lazy">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Calendar -->
+  <div class="section" id="calendar">
+    <h2>Calendar</h2>
+    <div class="screenshot-grid">
+      <div class="screenshot-pair">
+        <div class="pair-title">Month Navigation Bar</div>
+        <div class="pair-images">
+          <div class="img-wrapper">
+            <span class="mode-label">Light</span>
+            <img src="screenshots/com.carenote.app.ui.screens.calendar.CalendarScreenKt.MonthNavigationBarPreview.Light_WITH_BACKGROUND_DAY.png" alt="Month Nav - Light" loading="lazy">
+          </div>
+          <div class="img-wrapper">
+            <span class="mode-label">Dark</span>
+            <img src="screenshots/com.carenote.app.ui.screens.calendar.CalendarScreenKt.MonthNavigationBarPreview.Dark_WITH_BACKGROUND_NIGHT.png" alt="Month Nav - Dark" loading="lazy">
+          </div>
+        </div>
+      </div>
+      <div class="screenshot-pair">
+        <div class="pair-title">Date Selector</div>
+        <div class="pair-images">
+          <div class="img-wrapper">
+            <span class="mode-label">Light</span>
+            <img src="screenshots/com.carenote.app.ui.screens.calendar.AddEditCalendarEventScreenKt.DateSelectorPreview.Light_WITH_BACKGROUND_DAY.png" alt="Date Selector - Light" loading="lazy">
+          </div>
+          <div class="img-wrapper">
+            <span class="mode-label">Dark</span>
+            <img src="screenshots/com.carenote.app.ui.screens.calendar.AddEditCalendarEventScreenKt.DateSelectorPreview.Dark_WITH_BACKGROUND_NIGHT.png" alt="Date Selector - Dark" loading="lazy">
+          </div>
+        </div>
+      </div>
+      <div class="screenshot-pair">
+        <div class="pair-title">Time Selector</div>
+        <div class="pair-images">
+          <div class="img-wrapper">
+            <span class="mode-label">Light</span>
+            <img src="screenshots/com.carenote.app.ui.screens.calendar.AddEditCalendarEventScreenKt.TimeSelectorPreview.Light_WITH_BACKGROUND_DAY.png" alt="Time Selector - Light" loading="lazy">
+          </div>
+          <div class="img-wrapper">
+            <span class="mode-label">Dark</span>
+            <img src="screenshots/com.carenote.app.ui.screens.calendar.AddEditCalendarEventScreenKt.TimeSelectorPreview.Dark_WITH_BACKGROUND_NIGHT.png" alt="Time Selector - Dark" loading="lazy">
+          </div>
+        </div>
+      </div>
+      <div class="screenshot-pair">
+        <div class="pair-title">All Day Toggle</div>
+        <div class="pair-images">
+          <div class="img-wrapper">
+            <span class="mode-label">Light</span>
+            <img src="screenshots/com.carenote.app.ui.screens.calendar.AddEditCalendarEventScreenKt.AllDayTogglePreview.Light_WITH_BACKGROUND_DAY.png" alt="All Day Toggle - Light" loading="lazy">
+          </div>
+          <div class="img-wrapper">
+            <span class="mode-label">Dark</span>
+            <img src="screenshots/com.carenote.app.ui.screens.calendar.AddEditCalendarEventScreenKt.AllDayTogglePreview.Dark_WITH_BACKGROUND_NIGHT.png" alt="All Day Toggle - Dark" loading="lazy">
+          </div>
+        </div>
+      </div>
+      <div class="screenshot-pair">
+        <div class="pair-title">Form - Date Selector</div>
+        <div class="pair-images">
+          <div class="img-wrapper">
+            <span class="mode-label">Light</span>
+            <img src="screenshots/com.carenote.app.ui.screens.calendar.components.CalendarEventFormFieldsKt.DateSelectorPreview.Light_WITH_BACKGROUND_DAY.png" alt="Form Date - Light" loading="lazy">
+          </div>
+          <div class="img-wrapper">
+            <span class="mode-label">Dark</span>
+            <img src="screenshots/com.carenote.app.ui.screens.calendar.components.CalendarEventFormFieldsKt.DateSelectorPreview.Dark_WITH_BACKGROUND_NIGHT.png" alt="Form Date - Dark" loading="lazy">
+          </div>
+        </div>
+      </div>
+      <div class="screenshot-pair">
+        <div class="pair-title">Form - Time Selector</div>
+        <div class="pair-images">
+          <div class="img-wrapper">
+            <span class="mode-label">Light</span>
+            <img src="screenshots/com.carenote.app.ui.screens.calendar.components.CalendarEventFormFieldsKt.TimeSelectorPreview.Light_WITH_BACKGROUND_DAY.png" alt="Form Time - Light" loading="lazy">
+          </div>
+          <div class="img-wrapper">
+            <span class="mode-label">Dark</span>
+            <img src="screenshots/com.carenote.app.ui.screens.calendar.components.CalendarEventFormFieldsKt.TimeSelectorPreview.Dark_WITH_BACKGROUND_NIGHT.png" alt="Form Time - Dark" loading="lazy">
+          </div>
+        </div>
+      </div>
+      <div class="screenshot-pair">
+        <div class="pair-title">Form - All Day Toggle</div>
+        <div class="pair-images">
+          <div class="img-wrapper">
+            <span class="mode-label">Light</span>
+            <img src="screenshots/com.carenote.app.ui.screens.calendar.components.CalendarEventFormFieldsKt.AllDayTogglePreview.Light_WITH_BACKGROUND_DAY.png" alt="Form All Day - Light" loading="lazy">
+          </div>
+          <div class="img-wrapper">
+            <span class="mode-label">Dark</span>
+            <img src="screenshots/com.carenote.app.ui.screens.calendar.components.CalendarEventFormFieldsKt.AllDayTogglePreview.Dark_WITH_BACKGROUND_NIGHT.png" alt="Form All Day - Dark" loading="lazy">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Medication -->
+  <div class="section" id="medication">
+    <h2>Medication</h2>
+    <div class="screenshot-grid">
+      <div class="screenshot-pair">
+        <div class="pair-title">Medication List</div>
+        <div class="pair-images">
+          <div class="img-wrapper">
+            <span class="mode-label">Light</span>
+            <img src="screenshots/com.carenote.app.ui.screens.medication.MedicationScreenKt.MedicationListPreview.Light_WITH_BACKGROUND_DAY.png" alt="Medication List - Light" loading="lazy">
+          </div>
+          <div class="img-wrapper">
+            <span class="mode-label">Dark</span>
+            <img src="screenshots/com.carenote.app.ui.screens.medication.MedicationScreenKt.MedicationListPreview.Dark_WITH_BACKGROUND_NIGHT.png" alt="Medication List - Dark" loading="lazy">
+          </div>
+        </div>
+      </div>
+      <div class="screenshot-pair">
+        <div class="pair-title">Timing Selector</div>
+        <div class="pair-images">
+          <div class="img-wrapper">
+            <span class="mode-label">Light</span>
+            <img src="screenshots/com.carenote.app.ui.screens.medication.AddEditMedicationScreenKt.TimingSelectorPreview.Light_WITH_BACKGROUND_DAY.png" alt="Timing Selector - Light" loading="lazy">
+          </div>
+          <div class="img-wrapper">
+            <span class="mode-label">Dark</span>
+            <img src="screenshots/com.carenote.app.ui.screens.medication.AddEditMedicationScreenKt.TimingSelectorPreview.Dark_WITH_BACKGROUND_NIGHT.png" alt="Timing Selector - Dark" loading="lazy">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tasks -->
+  <div class="section" id="tasks">
+    <h2>Tasks</h2>
+    <div class="screenshot-grid">
+      <div class="screenshot-pair">
+        <div class="pair-title">Task Card</div>
+        <div class="pair-images">
+          <div class="img-wrapper">
+            <span class="mode-label">Light</span>
+            <img src="screenshots/com.carenote.app.ui.screens.tasks.TasksScreenKt.TaskCardPreview.Light_WITH_BACKGROUND_DAY.png" alt="Task Card - Light" loading="lazy">
+          </div>
+          <div class="img-wrapper">
+            <span class="mode-label">Dark</span>
+            <img src="screenshots/com.carenote.app.ui.screens.tasks.TasksScreenKt.TaskCardPreview.Dark_WITH_BACKGROUND_NIGHT.png" alt="Task Card - Dark" loading="lazy">
+          </div>
+        </div>
+      </div>
+      <div class="screenshot-pair">
+        <div class="pair-title">Filter Chips</div>
+        <div class="pair-images">
+          <div class="img-wrapper">
+            <span class="mode-label">Light</span>
+            <img src="screenshots/com.carenote.app.ui.screens.tasks.TasksScreenKt.TaskFilterChipsPreview.Light_WITH_BACKGROUND_DAY.png" alt="Filter Chips - Light" loading="lazy">
+          </div>
+          <div class="img-wrapper">
+            <span class="mode-label">Dark</span>
+            <img src="screenshots/com.carenote.app.ui.screens.tasks.TasksScreenKt.TaskFilterChipsPreview.Dark_WITH_BACKGROUND_NIGHT.png" alt="Filter Chips - Dark" loading="lazy">
+          </div>
+        </div>
+      </div>
+      <div class="screenshot-pair">
+        <div class="pair-title">Priority Selector</div>
+        <div class="pair-images">
+          <div class="img-wrapper">
+            <span class="mode-label">Light</span>
+            <img src="screenshots/com.carenote.app.ui.screens.tasks.AddEditTaskScreenKt.PrioritySelectorPreview.Light_WITH_BACKGROUND_DAY.png" alt="Priority - Light" loading="lazy">
+          </div>
+          <div class="img-wrapper">
+            <span class="mode-label">Dark</span>
+            <img src="screenshots/com.carenote.app.ui.screens.tasks.AddEditTaskScreenKt.PrioritySelectorPreview.Dark_WITH_BACKGROUND_NIGHT.png" alt="Priority - Dark" loading="lazy">
+          </div>
+        </div>
+      </div>
+      <div class="screenshot-pair">
+        <div class="pair-title">Reminder Section</div>
+        <div class="pair-images">
+          <div class="img-wrapper">
+            <span class="mode-label">Light</span>
+            <img src="screenshots/com.carenote.app.ui.screens.tasks.AddEditTaskScreenKt.ReminderSectionPreview.Light_WITH_BACKGROUND_DAY.png" alt="Reminder - Light" loading="lazy">
+          </div>
+          <div class="img-wrapper">
+            <span class="mode-label">Dark</span>
+            <img src="screenshots/com.carenote.app.ui.screens.tasks.AddEditTaskScreenKt.ReminderSectionPreview.Dark_WITH_BACKGROUND_NIGHT.png" alt="Reminder - Dark" loading="lazy">
+          </div>
+        </div>
+      </div>
+      <div class="screenshot-pair">
+        <div class="pair-title">Due Date Selector</div>
+        <div class="pair-images">
+          <div class="img-wrapper">
+            <span class="mode-label">Light</span>
+            <img src="screenshots/com.carenote.app.ui.screens.tasks.AddEditTaskScreenKt.DueDateSelectorPreview.Light_WITH_BACKGROUND_DAY.png" alt="Due Date - Light" loading="lazy">
+          </div>
+          <div class="img-wrapper">
+            <span class="mode-label">Dark</span>
+            <img src="screenshots/com.carenote.app.ui.screens.tasks.AddEditTaskScreenKt.DueDateSelectorPreview.Dark_WITH_BACKGROUND_NIGHT.png" alt="Due Date - Dark" loading="lazy">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notes -->
+  <div class="section" id="notes">
+    <h2>Notes</h2>
+    <div class="screenshot-grid">
+      <div class="screenshot-pair">
+        <div class="pair-title">Note List</div>
+        <div class="pair-images">
+          <div class="img-wrapper">
+            <span class="mode-label">Light</span>
+            <img src="screenshots/com.carenote.app.ui.screens.notes.NotesScreenKt.NoteListContentPreview.Light_WITH_BACKGROUND_DAY.png" alt="Note List - Light" loading="lazy">
+          </div>
+          <div class="img-wrapper">
+            <span class="mode-label">Dark</span>
+            <img src="screenshots/com.carenote.app.ui.screens.notes.NotesScreenKt.NoteListContentPreview.Dark_WITH_BACKGROUND_NIGHT.png" alt="Note List - Dark" loading="lazy">
+          </div>
+        </div>
+      </div>
+      <div class="screenshot-pair">
+        <div class="pair-title">Tag Filter</div>
+        <div class="pair-images">
+          <div class="img-wrapper">
+            <span class="mode-label">Light</span>
+            <img src="screenshots/com.carenote.app.ui.screens.notes.NotesScreenKt.TagFilterRowPreview.Light_WITH_BACKGROUND_DAY.png" alt="Tag Filter - Light" loading="lazy">
+          </div>
+          <div class="img-wrapper">
+            <span class="mode-label">Dark</span>
+            <img src="screenshots/com.carenote.app.ui.screens.notes.NotesScreenKt.TagFilterRowPreview.Dark_WITH_BACKGROUND_NIGHT.png" alt="Tag Filter - Dark" loading="lazy">
+          </div>
+        </div>
+      </div>
+      <div class="screenshot-pair">
+        <div class="pair-title">Add/Edit Note Form</div>
+        <div class="pair-images">
+          <div class="img-wrapper">
+            <span class="mode-label">Light</span>
+            <img src="screenshots/com.carenote.app.ui.screens.notes.AddEditNoteScreenKt.AddEditNoteFormPreview.Light_WITH_BACKGROUND_DAY.png" alt="Note Form - Light" loading="lazy">
+          </div>
+          <div class="img-wrapper">
+            <span class="mode-label">Dark</span>
+            <img src="screenshots/com.carenote.app.ui.screens.notes.AddEditNoteScreenKt.AddEditNoteFormPreview.Dark_WITH_BACKGROUND_NIGHT.png" alt="Note Form - Dark" loading="lazy">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Health Records -->
+  <div class="section" id="healthrecords">
+    <h2>Health Records</h2>
+    <div class="screenshot-grid">
+      <div class="screenshot-pair">
+        <div class="pair-title">Health Record List</div>
+        <div class="pair-images">
+          <div class="img-wrapper">
+            <span class="mode-label">Light</span>
+            <img src="screenshots/com.carenote.app.ui.screens.healthrecords.HealthRecordsScreenKt.HealthRecordListContentPreview.Light_WITH_BACKGROUND_DAY.png" alt="Health Records - Light" loading="lazy">
+          </div>
+          <div class="img-wrapper">
+            <span class="mode-label">Dark</span>
+            <img src="screenshots/com.carenote.app.ui.screens.healthrecords.HealthRecordsScreenKt.HealthRecordListContentPreview.Dark_WITH_BACKGROUND_NIGHT.png" alt="Health Records - Dark" loading="lazy">
+          </div>
+        </div>
+      </div>
+      <div class="screenshot-pair">
+        <div class="pair-title">Condition Note Field</div>
+        <div class="pair-images">
+          <div class="img-wrapper">
+            <span class="mode-label">Light</span>
+            <img src="screenshots/com.carenote.app.ui.screens.healthrecords.AddEditHealthRecordScreenKt.ConditionNoteFieldPreview.Light_WITH_BACKGROUND_DAY.png" alt="Condition Note - Light" loading="lazy">
+          </div>
+          <div class="img-wrapper">
+            <span class="mode-label">Dark</span>
+            <img src="screenshots/com.carenote.app.ui.screens.healthrecords.AddEditHealthRecordScreenKt.ConditionNoteFieldPreview.Dark_WITH_BACKGROUND_NIGHT.png" alt="Condition Note - Dark" loading="lazy">
+          </div>
+        </div>
+      </div>
+      <div class="screenshot-pair">
+        <div class="pair-title">Form Action Buttons</div>
+        <div class="pair-images">
+          <div class="img-wrapper">
+            <span class="mode-label">Light</span>
+            <img src="screenshots/com.carenote.app.ui.screens.healthrecords.AddEditHealthRecordScreenKt.FormActionButtonsPreview.Light_WITH_BACKGROUND_DAY.png" alt="Form Buttons - Light" loading="lazy">
+          </div>
+          <div class="img-wrapper">
+            <span class="mode-label">Dark</span>
+            <img src="screenshots/com.carenote.app.ui.screens.healthrecords.AddEditHealthRecordScreenKt.FormActionButtonsPreview.Dark_WITH_BACKGROUND_NIGHT.png" alt="Form Buttons - Dark" loading="lazy">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search -->
+  <div class="section" id="search">
+    <h2>Search</h2>
+    <div class="screenshot-grid">
+      <div class="screenshot-pair">
+        <div class="pair-title">Search Content</div>
+        <div class="pair-images">
+          <div class="img-wrapper">
+            <span class="mode-label">Light</span>
+            <img src="screenshots/com.carenote.app.ui.screens.search.SearchScreenKt.SearchContentPreview.Light_WITH_BACKGROUND_DAY.png" alt="Search - Light" loading="lazy">
+          </div>
+          <div class="img-wrapper">
+            <span class="mode-label">Dark</span>
+            <img src="screenshots/com.carenote.app.ui.screens.search.SearchScreenKt.SearchContentPreview.Dark_WITH_BACKGROUND_NIGHT.png" alt="Search - Dark" loading="lazy">
+          </div>
+        </div>
+      </div>
+      <div class="screenshot-pair">
+        <div class="pair-title">Search Result Item</div>
+        <div class="pair-images">
+          <div class="img-wrapper">
+            <span class="mode-label">Light</span>
+            <img src="screenshots/com.carenote.app.ui.screens.search.SearchScreenKt.SearchResultItemPreview.Light_WITH_BACKGROUND_DAY.png" alt="Search Result - Light" loading="lazy">
+          </div>
+          <div class="img-wrapper">
+            <span class="mode-label">Dark</span>
+            <img src="screenshots/com.carenote.app.ui.screens.search.SearchScreenKt.SearchResultItemPreview.Dark_WITH_BACKGROUND_NIGHT.png" alt="Search Result - Dark" loading="lazy">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings -->
+  <div class="section" id="settings">
+    <h2>Settings</h2>
+    <div class="screenshot-grid">
+      <div class="screenshot-pair">
+        <div class="pair-title">Data Export Section</div>
+        <div class="pair-images">
+          <div class="img-wrapper">
+            <span class="mode-label">Light</span>
+            <img src="screenshots/com.carenote.app.ui.screens.settings.sections.DataExportSectionKt.DataExportSectionPreview.Light_WITH_BACKGROUND_DAY.png" alt="Export Section - Light" loading="lazy">
+          </div>
+          <div class="img-wrapper">
+            <span class="mode-label">Dark</span>
+            <img src="screenshots/com.carenote.app.ui.screens.settings.sections.DataExportSectionKt.DataExportSectionPreview.Dark_WITH_BACKGROUND_NIGHT.png" alt="Export Section - Dark" loading="lazy">
+          </div>
+        </div>
+      </div>
+      <div class="screenshot-pair">
+        <div class="pair-title">Data Export Dialog</div>
+        <div class="pair-images">
+          <div class="img-wrapper">
+            <span class="mode-label">Light</span>
+            <img src="screenshots/com.carenote.app.ui.screens.settings.dialogs.DataExportDialogKt.DataExportDialogPreview.Light_WITH_BACKGROUND_DAY.png" alt="Export Dialog - Light" loading="lazy">
+          </div>
+          <div class="img-wrapper">
+            <span class="mode-label">Dark</span>
+            <img src="screenshots/com.carenote.app.ui.screens.settings.dialogs.DataExportDialogKt.DataExportDialogPreview.Dark_WITH_BACKGROUND_NIGHT.png" alt="Export Dialog - Dark" loading="lazy">
+          </div>
+        </div>
+      </div>
+      <div class="screenshot-pair">
+        <div class="pair-title">Premium (Active)</div>
+        <div class="pair-images">
+          <div class="img-wrapper">
+            <span class="mode-label">Light</span>
+            <img src="screenshots/com.carenote.app.ui.screens.settings.sections.PremiumSectionKt.PremiumSectionActivePreview.Light_WITH_BACKGROUND_DAY.png" alt="Premium Active - Light" loading="lazy">
+          </div>
+          <div class="img-wrapper">
+            <span class="mode-label">Dark</span>
+            <img src="screenshots/com.carenote.app.ui.screens.settings.sections.PremiumSectionKt.PremiumSectionActivePreview.Dark_WITH_BACKGROUND_NIGHT.png" alt="Premium Active - Dark" loading="lazy">
+          </div>
+        </div>
+      </div>
+      <div class="screenshot-pair">
+        <div class="pair-title">Premium (Inactive)</div>
+        <div class="pair-images">
+          <div class="img-wrapper">
+            <span class="mode-label">Light</span>
+            <img src="screenshots/com.carenote.app.ui.screens.settings.sections.PremiumSectionKt.PremiumSectionInactivePreview.Light_WITH_BACKGROUND_DAY.png" alt="Premium Inactive - Light" loading="lazy">
+          </div>
+          <div class="img-wrapper">
+            <span class="mode-label">Dark</span>
+            <img src="screenshots/com.carenote.app.ui.screens.settings.sections.PremiumSectionKt.PremiumSectionInactivePreview.Dark_WITH_BACKGROUND_NIGHT.png" alt="Premium Inactive - Dark" loading="lazy">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Care Recipient -->
+  <div class="section" id="carerecipient">
+    <h2>Care Recipient</h2>
+    <div class="screenshot-grid">
+      <div class="screenshot-pair">
+        <div class="pair-title">Care Recipient Profile</div>
+        <div class="pair-images">
+          <div class="img-wrapper">
+            <span class="mode-label">Light</span>
+            <img src="screenshots/com.carenote.app.ui.screens.carerecipient.CareRecipientScreenKt.CareRecipientContentPreview.Light_WITH_BACKGROUND_DAY.png" alt="Care Recipient - Light" loading="lazy">
+          </div>
+          <div class="img-wrapper">
+            <span class="mode-label">Dark</span>
+            <img src="screenshots/com.carenote.app.ui.screens.carerecipient.CareRecipientScreenKt.CareRecipientContentPreview.Dark_WITH_BACKGROUND_NIGHT.png" alt="Care Recipient - Dark" loading="lazy">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <p>CareNote Screenshot Gallery &mdash; Generated from <a href="https://github.com/takahirom/roborazzi">Roborazzi</a> golden images</p>
+  <p>34 components &times; Light/Dark = 68 screenshots</p>
+</footer>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox">
+  <img id="lightbox-img" src="" alt="">
+</div>
+
+<script>
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightbox-img');
+
+  document.querySelectorAll('.img-wrapper img').forEach(img => {
+    img.addEventListener('click', () => {
+      lightboxImg.src = img.src;
+      lightboxImg.alt = img.alt;
+      lightbox.classList.add('active');
+    });
+  });
+
+  lightbox.addEventListener('click', () => {
+    lightbox.classList.remove('active');
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') lightbox.classList.remove('active');
+  });
+</script>
+
+</body>
+</html>
