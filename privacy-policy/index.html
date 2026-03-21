@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CareNote - Privacy Policy / プライバシーポリシー</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Noto Sans JP', 'Inter', -apple-system, sans-serif;
+      background: #f8faf8;
+      color: #1a2e1a;
+      line-height: 1.8;
+    }
+
+    body.lang-en .jp { display: none; }
+    body:not(.lang-en) .en { display: none; }
+
+    /* Language Toggle */
+    .lang-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 100;
+      background: rgba(255,255,255,0.9);
+      backdrop-filter: blur(10px);
+      border: 1px solid #c8e6c9;
+      border-radius: 24px;
+      padding: 4px;
+      display: flex;
+      gap: 2px;
+    }
+    .lang-toggle button {
+      padding: 6px 16px;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      background: transparent;
+      color: #4a7c59;
+      transition: all 0.2s;
+    }
+    .lang-toggle button.active {
+      background: #2e7d32;
+      color: #fff;
+    }
+
+    /* Header */
+    header {
+      background: linear-gradient(180deg, #e8f5e9 0%, #f8faf8 100%);
+      padding: 60px 24px 40px;
+      text-align: center;
+      border-bottom: 1px solid #c8e6c9;
+    }
+    header h1 {
+      font-size: clamp(1.5rem, 4vw, 2.2rem);
+      font-weight: 700;
+      color: #1b5e20;
+      margin-bottom: 8px;
+    }
+    header p {
+      color: #4a7c59;
+      font-size: 0.95rem;
+    }
+    .back-link {
+      display: inline-block;
+      margin-top: 16px;
+      color: #2e7d32;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+    .back-link:hover { text-decoration: underline; }
+
+    /* Main Content */
+    main {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 48px 24px;
+    }
+
+    section {
+      margin-bottom: 40px;
+    }
+
+    h2 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #1b5e20;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #2e7d32;
+      display: inline-block;
+    }
+
+    h3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #2e7d32;
+      margin-top: 20px;
+      margin-bottom: 8px;
+    }
+
+    p {
+      color: #1a2e1a;
+      font-size: 0.95rem;
+      margin-bottom: 12px;
+    }
+
+    ul {
+      margin: 8px 0 16px 24px;
+      color: #1a2e1a;
+      font-size: 0.95rem;
+    }
+    ul li {
+      margin-bottom: 6px;
+    }
+
+    .info-card {
+      background: #fff;
+      border: 1px solid #c8e6c9;
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+
+    .contact-box {
+      background: #e8f5e9;
+      border: 1px solid #c8e6c9;
+      border-radius: 14px;
+      padding: 24px;
+      text-align: center;
+    }
+    .contact-box a {
+      color: #2e7d32;
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .contact-box a:hover { text-decoration: underline; }
+
+    /* Footer */
+    footer {
+      padding: 40px 24px;
+      text-align: center;
+      color: #7a9a7a;
+      font-size: 0.85rem;
+      border-top: 1px solid #c8e6c9;
+    }
+    footer a {
+      color: #4a7c59;
+      text-decoration: none;
+    }
+    footer a:hover { text-decoration: underline; }
+
+    @media (max-width: 600px) {
+      header { padding: 50px 16px 30px; }
+      main { padding: 32px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="lang-toggle">
+  <button class="active" id="btn-ja" onclick="toggleLang()">JP</button>
+  <button id="btn-en" onclick="toggleLang()">EN</button>
+</div>
+
+<header>
+  <h1>
+    <span class="jp">プライバシーポリシー</span>
+    <span class="en">Privacy Policy</span>
+  </h1>
+  <p>
+    <span class="jp">CareNote（ケアのて）- KS Apps</span>
+    <span class="en">CareNote - KS Apps</span>
+  </p>
+  <a class="back-link" href="https://kazu-apps.github.io/carenote-beta/">
+    <span class="jp">&larr; トップページに戻る</span>
+    <span class="en">&larr; Back to top page</span>
+  </a>
+</header>
+
+<main>
+
+  <!-- Last Updated -->
+  <p style="color: #7a9a7a; font-size: 0.85rem; margin-bottom: 32px;">
+    <span class="jp">最終更新日: 2026年3月22日</span>
+    <span class="en">Last updated: March 22, 2026</span>
+  </p>
+
+  <!-- Introduction -->
+  <section>
+    <h2>
+      <span class="jp">はじめに</span>
+      <span class="en">Introduction</span>
+    </h2>
+    <p>
+      <span class="jp">KS Apps（以下「当社」）は、CareNote（ケアのて）アプリ（以下「本アプリ」）をご利用いただくお客様のプライバシーを尊重し、個人情報の保護に努めています。本プライバシーポリシーでは、本アプリが収集する情報、その利用目的、およびお客様の権利について説明します。</span>
+      <span class="en">KS Apps ("we", "us", or "our") respects the privacy of users of the CareNote app ("the App") and is committed to protecting your personal information. This Privacy Policy explains what information we collect, how we use it, and your rights regarding that information.</span>
+    </p>
+  </section>
+
+  <!-- Information We Collect -->
+  <section>
+    <h2>
+      <span class="jp">収集する情報</span>
+      <span class="en">Information We Collect</span>
+    </h2>
+
+    <div class="info-card">
+      <h3>
+        <span class="jp">アカウント情報</span>
+        <span class="en">Account Information</span>
+      </h3>
+      <ul>
+        <li>
+          <span class="jp">メールアドレス（認証・ログイン用）</span>
+          <span class="en">Email address (for authentication and login)</span>
+        </li>
+        <li>
+          <span class="jp">表示名（アプリ内での表示用）</span>
+          <span class="en">Display name (shown within the app)</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="info-card">
+      <h3>
+        <span class="jp">ケア記録データ</span>
+        <span class="en">Care Record Data</span>
+      </h3>
+      <ul>
+        <li>
+          <span class="jp">ケア対象者情報（名前、生年月日、介護度等）</span>
+          <span class="en">Care recipient information (name, date of birth, care level, etc.)</span>
+        </li>
+        <li>
+          <span class="jp">健康記録（体温、血圧、脈拍、体重、食事量、排泄、体調メモ）</span>
+          <span class="en">Health records (temperature, blood pressure, pulse, weight, meals, excretion, condition notes)</span>
+        </li>
+        <li>
+          <span class="jp">服薬情報（薬名、用量、服薬スケジュール、服薬記録）</span>
+          <span class="en">Medication information (drug name, dosage, schedule, intake records)</span>
+        </li>
+        <li>
+          <span class="jp">カレンダーイベント（通院、訪問看護等の予定）</span>
+          <span class="en">Calendar events (hospital visits, home nursing schedules, etc.)</span>
+        </li>
+        <li>
+          <span class="jp">メモ・申し送り（テキスト、写真添付）</span>
+          <span class="en">Care notes and handoff memos (text and photo attachments)</span>
+        </li>
+        <li>
+          <span class="jp">タスク（介護タスクの管理情報）</span>
+          <span class="en">Tasks (care task management information)</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="info-card">
+      <h3>
+        <span class="jp">自動収集データ</span>
+        <span class="en">Automatically Collected Data</span>
+      </h3>
+      <ul>
+        <li>
+          <span class="jp">クラッシュレポート・エラーログ（Firebase Crashlytics 経由）</span>
+          <span class="en">Crash reports and error logs (via Firebase Crashlytics)</span>
+        </li>
+        <li>
+          <span class="jp">利用状況の匿名統計情報（Firebase Analytics 経由）</span>
+          <span class="en">Anonymous usage statistics (via Firebase Analytics)</span>
+        </li>
+        <li>
+          <span class="jp">デバイス情報（OS バージョン、デバイスモデル等 - クラッシュレポート用）</span>
+          <span class="en">Device information (OS version, device model, etc. - for crash reporting)</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- How We Use Information -->
+  <section>
+    <h2>
+      <span class="jp">情報の利用目的</span>
+      <span class="en">How We Use Your Information</span>
+    </h2>
+    <ul>
+      <li>
+        <span class="jp">本アプリの機能提供およびユーザー認証</span>
+        <span class="en">Providing app functionality and user authentication</span>
+      </li>
+      <li>
+        <span class="jp">家族メンバー間でのケア記録の同期・共有</span>
+        <span class="en">Syncing and sharing care records among family members</span>
+      </li>
+      <li>
+        <span class="jp">リマインダー通知（服薬、タスク、予定）の送信</span>
+        <span class="en">Sending reminder notifications (medications, tasks, events)</span>
+      </li>
+      <li>
+        <span class="jp">アプリの不具合修正・品質向上</span>
+        <span class="en">Bug fixes and quality improvements</span>
+      </li>
+      <li>
+        <span class="jp">匿名統計によるアプリ利用傾向の分析</span>
+        <span class="en">Analyzing app usage trends via anonymous statistics</span>
+      </li>
+    </ul>
+  </section>
+
+  <!-- Data Storage and Security -->
+  <section>
+    <h2>
+      <span class="jp">データの保存とセキュリティ</span>
+      <span class="en">Data Storage and Security</span>
+    </h2>
+    <div class="info-card">
+      <h3>
+        <span class="jp">ローカルストレージ</span>
+        <span class="en">Local Storage</span>
+      </h3>
+      <p>
+        <span class="jp">ケア記録データはお客様のデバイス上に SQLCipher により暗号化して保存されます。</span>
+        <span class="en">Care record data is stored on your device and encrypted using SQLCipher.</span>
+      </p>
+    </div>
+    <div class="info-card">
+      <h3>
+        <span class="jp">クラウド同期</span>
+        <span class="en">Cloud Sync</span>
+      </h3>
+      <p>
+        <span class="jp">家族間でのデータ共有を目的として、データは Firebase（Firestore, Auth, Storage）に同期されます。Firebase はデータの転送時および保存時に暗号化を実施しています。</span>
+        <span class="en">To enable data sharing among family members, data is synced to Firebase (Firestore, Auth, Storage). Firebase encrypts data both in transit and at rest.</span>
+      </p>
+    </div>
+  </section>
+
+  <!-- Third-Party Services -->
+  <section>
+    <h2>
+      <span class="jp">第三者サービス</span>
+      <span class="en">Third-Party Services</span>
+    </h2>
+    <p>
+      <span class="jp">本アプリは以下の Google Firebase サービスを利用しています。</span>
+      <span class="en">The App uses the following Google Firebase services:</span>
+    </p>
+    <ul>
+      <li>
+        <span class="jp"><strong>Firebase Authentication</strong> - ユーザー認証</span>
+        <span class="en"><strong>Firebase Authentication</strong> - User authentication</span>
+      </li>
+      <li>
+        <span class="jp"><strong>Cloud Firestore</strong> - ケア記録データの同期・保存</span>
+        <span class="en"><strong>Cloud Firestore</strong> - Syncing and storing care record data</span>
+      </li>
+      <li>
+        <span class="jp"><strong>Firebase Storage</strong> - 写真の保存</span>
+        <span class="en"><strong>Firebase Storage</strong> - Photo storage</span>
+      </li>
+      <li>
+        <span class="jp"><strong>Firebase Cloud Messaging</strong> - プッシュ通知</span>
+        <span class="en"><strong>Firebase Cloud Messaging</strong> - Push notifications</span>
+      </li>
+      <li>
+        <span class="jp"><strong>Firebase Crashlytics</strong> - クラッシュレポート（個人を特定する情報は含みません）</span>
+        <span class="en"><strong>Firebase Crashlytics</strong> - Crash reports (no personally identifiable information included)</span>
+      </li>
+      <li>
+        <span class="jp"><strong>Firebase Analytics</strong> - 匿名利用統計（広告トラッキングは行いません）</span>
+        <span class="en"><strong>Firebase Analytics</strong> - Anonymous usage statistics (no ad tracking)</span>
+      </li>
+    </ul>
+    <p>
+      <span class="jp"><strong>当社はお客様のデータを第三者に販売することは一切ありません。</strong>広告トラッキングも行っていません。</span>
+      <span class="en"><strong>We do not sell your data to third parties under any circumstances.</strong> We do not perform any ad tracking.</span>
+    </p>
+  </section>
+
+  <!-- Data Export -->
+  <section>
+    <h2>
+      <span class="jp">データのエクスポート</span>
+      <span class="en">Data Export</span>
+    </h2>
+    <p>
+      <span class="jp">お客様はいつでもアプリ内からケア記録データを CSV または PDF 形式でエクスポートすることができます。アプリの設定画面からエクスポート機能をご利用ください。</span>
+      <span class="en">You can export your care record data at any time in CSV or PDF format from within the app. Use the export function available in the app's Settings screen.</span>
+    </p>
+  </section>
+
+  <!-- Data Deletion -->
+  <section>
+    <h2>
+      <span class="jp">データの削除</span>
+      <span class="en">Data Deletion</span>
+    </h2>
+    <p>
+      <span class="jp">お客様はアプリの設定画面からアカウントを削除することができます。アカウント削除により、ローカルデータおよびクラウド上のすべてのデータが完全に削除されます。</span>
+      <span class="en">You can delete your account from the app's Settings screen. Deleting your account permanently removes all local and cloud data.</span>
+    </p>
+    <p>
+      <span class="jp">詳細な手順については <a href="../account-deletion/" style="color: #2e7d32; font-weight: 500;">アカウント削除方法</a> のページをご覧ください。アプリにアクセスできない場合は、<a href="../data-deletion/" style="color: #2e7d32; font-weight: 500;">データ削除リクエスト</a> のページから手続き方法をご確認ください。</span>
+      <span class="en">For detailed instructions, please see the <a href="../account-deletion/" style="color: #2e7d32; font-weight: 500;">Account Deletion</a> page. If you cannot access the app, see the <a href="../data-deletion/" style="color: #2e7d32; font-weight: 500;">Data Deletion Request</a> page for alternative options.</span>
+    </p>
+  </section>
+
+  <!-- Children's Privacy -->
+  <section>
+    <h2>
+      <span class="jp">お子様のプライバシー</span>
+      <span class="en">Children's Privacy</span>
+    </h2>
+    <p>
+      <span class="jp">本アプリは13歳未満のお子様を対象としたサービスではありません。13歳未満のお子様から意図的に個人情報を収集することはありません。</span>
+      <span class="en">The App is not intended for children under the age of 13. We do not knowingly collect personal information from children under 13.</span>
+    </p>
+  </section>
+
+  <!-- Changes to This Policy -->
+  <section>
+    <h2>
+      <span class="jp">ポリシーの変更</span>
+      <span class="en">Changes to This Policy</span>
+    </h2>
+    <p>
+      <span class="jp">本プライバシーポリシーは随時更新される場合があります。重要な変更がある場合は、アプリ内通知またはこのページにて事前にお知らせします。</span>
+      <span class="en">This Privacy Policy may be updated from time to time. We will notify you of significant changes through in-app notifications or on this page.</span>
+    </p>
+  </section>
+
+  <!-- Contact -->
+  <section>
+    <h2>
+      <span class="jp">お問い合わせ</span>
+      <span class="en">Contact Us</span>
+    </h2>
+    <div class="contact-box">
+      <p>
+        <span class="jp">プライバシーに関するご質問やご要望がございましたら、下記までご連絡ください。</span>
+        <span class="en">If you have any questions or requests regarding your privacy, please contact us at:</span>
+      </p>
+      <p style="margin-top: 8px;">
+        <a href="mailto:support-carenote@ks-apps.org">support-carenote@ks-apps.org</a>
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>&copy; 2026 KS Apps</p>
+  <p style="margin-top: 4px;">
+    <span class="jp">最終更新: 2026年3月22日</span>
+    <span class="en">Last updated: March 22, 2026</span>
+  </p>
+</footer>
+
+<script>
+function toggleLang() {
+  document.body.classList.toggle('lang-en');
+  document.getElementById('btn-ja').classList.toggle('active');
+  document.getElementById('btn-en').classList.toggle('active');
+}
+</script>
+
+</body>
+</html>
