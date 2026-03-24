@@ -3,33 +3,87 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ケアのて Beta - 家族でつながる介護記録アプリ</title>
+  <meta name="description" content="家族でつながる介護記録アプリ「ケアのて」。服薬管理、健康記録、カレンダー、タスク、申し送りを家族みんなで共有。">
+  <meta property="og:title" content="ケアのて - CareNote">
+  <meta property="og:description" content="家族でつながる介護記録アプリ。服薬・健康・予定・タスク・申し送りを共有。">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="og-image.png">
+  <meta property="og:url" content="https://kazu-apps.github.io/carenote-beta/">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <title>ケアのて - 家族でつながる介護記録アプリ</title>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "ケアのて - CareNote",
+    "operatingSystem": "Android",
+    "applicationCategory": "HealthApplication",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" },
+    "description": "家族でつながる介護記録アプリ"
+  }
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    /* ===== Reset & Base ===== */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
 
     body {
       font-family: 'Noto Sans JP', 'Inter', -apple-system, sans-serif;
       background: #f8faf8;
       color: #1a2e1a;
       overflow-x: hidden;
+      line-height: 1.6;
     }
 
+    /* ===== Bilingual Toggle ===== */
     body.lang-en .jp { display: none; }
     body:not(.lang-en) .en { display: none; }
     body.lang-en .jp-inline { display: none; }
     body:not(.lang-en) .en-inline { display: none; }
 
-    /* Language Toggle */
+    /* ===== Skip Link ===== */
+    .skip-link {
+      position: absolute;
+      top: -100%;
+      left: 16px;
+      background: #1b5e20;
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 0 0 8px 8px;
+      font-weight: 600;
+      z-index: 200;
+      text-decoration: none;
+      transition: top 0.2s;
+    }
+    .skip-link:focus {
+      top: 0;
+    }
+
+    /* ===== Language Toggle ===== */
     .lang-toggle {
       position: fixed;
       top: 20px;
       right: 20px;
       z-index: 100;
-      background: rgba(255,255,255,0.9);
+      background: rgba(255, 255, 255, 0.9);
       backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       border: 1px solid #c8e6c9;
       border-radius: 24px;
       padding: 4px;
@@ -46,13 +100,23 @@
       background: transparent;
       color: #4a7c59;
       transition: all 0.2s;
+      font-family: inherit;
     }
     .lang-toggle button.active {
       background: #2e7d32;
       color: #fff;
     }
 
-    /* Hero */
+    /* ===== Section Shared ===== */
+    .section-heading {
+      text-align: center;
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      margin-bottom: 48px;
+      color: #1b5e20;
+      font-weight: 700;
+    }
+
+    /* ===== Hero ===== */
     .hero {
       min-height: 100vh;
       display: flex;
@@ -68,8 +132,8 @@
       content: '';
       position: absolute;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: radial-gradient(ellipse at 30% 20%, rgba(46,125,50,0.08) 0%, transparent 60%),
-                  radial-gradient(ellipse at 70% 80%, rgba(129,199,132,0.1) 0%, transparent 60%);
+      background: radial-gradient(ellipse at 30% 20%, rgba(46, 125, 50, 0.08) 0%, transparent 60%),
+                  radial-gradient(ellipse at 70% 80%, rgba(129, 199, 132, 0.1) 0%, transparent 60%);
       pointer-events: none;
     }
     .hero-icon {
@@ -82,7 +146,19 @@
       justify-content: center;
       font-size: 48px;
       margin-bottom: 32px;
-      box-shadow: 0 8px 32px rgba(46,125,50,0.25);
+      box-shadow: 0 8px 32px rgba(46, 125, 50, 0.25);
+      position: relative;
+    }
+    .badge {
+      display: inline-block;
+      background: rgba(46, 125, 50, 0.1);
+      color: #2e7d32;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 24px;
+      border: 1px solid rgba(46, 125, 50, 0.2);
       position: relative;
     }
     .hero h1 {
@@ -106,7 +182,7 @@
       line-height: 1.8;
       position: relative;
     }
-    .hero .cta-btn {
+    .cta-btn {
       display: inline-flex;
       align-items: center;
       gap: 10px;
@@ -117,64 +193,153 @@
       border-radius: 50px;
       font-size: 1.1rem;
       font-weight: 600;
-      transition: all 0.3s;
-      box-shadow: 0 4px 20px rgba(46,125,50,0.3);
+      transition: transform 0.3s, box-shadow 0.3s;
+      box-shadow: 0 4px 20px rgba(46, 125, 50, 0.3);
       position: relative;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
     }
-    .hero .cta-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 30px rgba(46,125,50,0.4);
+    @media (hover: hover) {
+      .cta-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(46, 125, 50, 0.4);
+      }
     }
-    .badge {
-      display: inline-block;
-      background: rgba(46,125,50,0.1);
-      color: #2e7d32;
-      padding: 6px 16px;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      margin-bottom: 24px;
-      border: 1px solid rgba(46,125,50,0.2);
+    .cta-btn:focus-visible {
+      outline: 3px solid #1b5e20;
+      outline-offset: 3px;
+    }
+    .hero .cta-note {
+      font-size: 0.8rem;
+      color: #7a9a7a;
+      margin-top: 12px;
       position: relative;
     }
 
-    /* Features */
+    /* ===== Persona Section ===== */
+    .persona {
+      padding: 80px 24px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .persona-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+    .persona-card {
+      background: #fff;
+      border: 1px solid #e8f5e9;
+      border-radius: 14px;
+      padding: 24px;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    @media (hover: hover) {
+      .persona-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 40px rgba(46, 125, 50, 0.1);
+        border-color: #a5d6a7;
+      }
+    }
+    .persona-card .persona-emoji {
+      font-size: 2rem;
+      margin-bottom: 12px;
+    }
+    .persona-card p {
+      color: #4a7c59;
+      font-size: 0.95rem;
+      line-height: 1.7;
+      font-weight: 500;
+    }
+
+    /* ===== Screenshots Section ===== */
+    .screenshots {
+      padding: 80px 24px;
+      background: linear-gradient(180deg, #f8faf8, #e8f5e9);
+    }
+    .screenshots-inner {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .screenshots-row {
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 8px;
+      scroll-snap-type: x mandatory;
+    }
+    .phone-mockup {
+      flex: 0 0 240px;
+      scroll-snap-align: center;
+      text-align: center;
+    }
+    .phone-frame {
+      width: 240px;
+      height: 420px;
+      background: #1a2e1a;
+      border-radius: 32px;
+      padding: 12px;
+      box-shadow: 0 8px 32px rgba(46, 125, 50, 0.15);
+    }
+    .phone-screen {
+      width: 100%;
+      height: 100%;
+      border-radius: 22px;
+      overflow: hidden;
+    }
+    .phone-screen-1 {
+      background: linear-gradient(160deg, #e8f5e9 0%, #c8e6c9 30%, #a5d6a7 60%, #81c784 100%);
+    }
+    .phone-screen-2 {
+      background: linear-gradient(160deg, #c8e6c9 0%, #81c784 40%, #66bb6a 70%, #4caf50 100%);
+    }
+    .phone-screen-3 {
+      background: linear-gradient(160deg, #a5d6a7 0%, #66bb6a 30%, #43a047 60%, #2e7d32 100%);
+    }
+    .phone-label {
+      margin-top: 16px;
+      font-size: 0.95rem;
+      color: #4a7c59;
+      font-weight: 600;
+    }
+
+    /* ===== Features (3 Pillars) ===== */
     .features {
       padding: 80px 24px;
       max-width: 1100px;
       margin: 0 auto;
     }
-    .features h2 {
-      text-align: center;
-      font-size: clamp(1.5rem, 3vw, 2rem);
-      margin-bottom: 48px;
-      color: #1b5e20;
-    }
     .features-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
     }
     .feature-card {
       background: #fff;
       border: 1px solid #e8f5e9;
       border-radius: 16px;
-      padding: 28px;
-      transition: all 0.3s;
+      padding: 32px 28px;
+      transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
     }
-    .feature-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 40px rgba(46,125,50,0.1);
-      border-color: #a5d6a7;
+    @media (hover: hover) {
+      .feature-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 40px rgba(46, 125, 50, 0.1);
+        border-color: #a5d6a7;
+      }
     }
     .feature-card .icon {
-      font-size: 2rem;
-      margin-bottom: 12px;
+      font-size: 2.5rem;
+      margin-bottom: 16px;
     }
     .feature-card h3 {
-      font-size: 1.1rem;
+      font-size: 1.2rem;
       color: #1b5e20;
-      margin-bottom: 8px;
+      margin-bottom: 12px;
+      font-weight: 700;
     }
     .feature-card p {
       color: #5a7a5a;
@@ -182,7 +347,7 @@
       line-height: 1.7;
     }
 
-    /* Benefits */
+    /* ===== Benefits ===== */
     .benefits {
       padding: 80px 24px;
       background: linear-gradient(180deg, #f8faf8, #e8f5e9);
@@ -190,12 +355,6 @@
     .benefits-inner {
       max-width: 700px;
       margin: 0 auto;
-    }
-    .benefits h2 {
-      text-align: center;
-      font-size: clamp(1.5rem, 3vw, 2rem);
-      margin-bottom: 40px;
-      color: #1b5e20;
     }
     .benefit-item {
       display: flex;
@@ -230,17 +389,11 @@
       line-height: 1.6;
     }
 
-    /* How to Join */
+    /* ===== How to Join ===== */
     .how-to {
       padding: 80px 24px;
       max-width: 800px;
       margin: 0 auto;
-    }
-    .how-to h2 {
-      text-align: center;
-      font-size: clamp(1.5rem, 3vw, 2rem);
-      margin-bottom: 48px;
-      color: #1b5e20;
     }
     .steps {
       display: flex;
@@ -275,19 +428,68 @@
       font-size: 0.95rem;
       line-height: 1.6;
     }
-    .step-content code {
-      background: #e8f5e9;
-      padding: 2px 8px;
-      border-radius: 4px;
-      font-size: 0.9rem;
-      color: #2e7d32;
+
+    /* ===== FAQ ===== */
+    .faq {
+      padding: 80px 24px;
+      background: linear-gradient(180deg, #e8f5e9, #f8faf8);
+    }
+    .faq-inner {
+      max-width: 750px;
+      margin: 0 auto;
+    }
+    .faq-item {
+      background: #fff;
+      border: 1px solid #c8e6c9;
+      border-radius: 14px;
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+    .faq-item summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 24px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1rem;
+      color: #1b5e20;
+      list-style: none;
+      gap: 12px;
+    }
+    .faq-item summary::-webkit-details-marker {
+      display: none;
+    }
+    .faq-item summary::after {
+      content: '';
+      width: 10px;
+      height: 10px;
+      border-right: 2px solid #4a7c59;
+      border-bottom: 2px solid #4a7c59;
+      transform: rotate(45deg);
+      transition: transform 0.2s;
+      flex-shrink: 0;
+    }
+    .faq-item[open] summary::after {
+      transform: rotate(-135deg);
+    }
+    .faq-item summary:focus-visible {
+      outline: 3px solid #2e7d32;
+      outline-offset: -3px;
+      border-radius: 14px;
+    }
+    .faq-answer {
+      padding: 0 24px 20px;
+      color: #5a7a5a;
+      font-size: 0.95rem;
+      line-height: 1.7;
     }
 
-    /* Final CTA */
+    /* ===== Final CTA ===== */
     .final-cta {
       padding: 80px 24px;
       text-align: center;
-      background: linear-gradient(180deg, #e8f5e9, #f8faf8);
+      background: linear-gradient(180deg, #f8faf8, #e8f5e9);
     }
     .final-cta h2 {
       font-size: clamp(1.3rem, 3vw, 1.8rem);
@@ -299,192 +501,314 @@
       font-size: 1rem;
       margin-bottom: 32px;
     }
-    .final-cta .cta-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 16px 36px;
-      background: linear-gradient(135deg, #2e7d32, #388e3c);
-      color: #fff;
-      text-decoration: none;
-      border-radius: 50px;
-      font-size: 1.1rem;
-      font-weight: 600;
-      transition: all 0.3s;
-      box-shadow: 0 4px 20px rgba(46,125,50,0.3);
+
+    /* ===== Floating CTA (mobile) ===== */
+    .floating-cta {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 90;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-top: 1px solid #c8e6c9;
+      padding: 12px 20px;
+      text-align: center;
+      transform: translateY(100%);
+      transition: transform 0.3s;
+      display: none;
     }
-    .final-cta .cta-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 30px rgba(46,125,50,0.4);
+    .floating-cta.visible {
+      transform: translateY(0);
+    }
+    .floating-cta .cta-btn {
+      padding: 12px 28px;
+      font-size: 0.95rem;
+      width: 100%;
+      max-width: 400px;
+      justify-content: center;
     }
 
-    /* Footer */
+    /* ===== Footer ===== */
     footer {
       padding: 40px 24px;
       text-align: center;
       color: #7a9a7a;
       font-size: 0.85rem;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
     }
     footer a {
       color: #4a7c59;
       text-decoration: none;
     }
     footer a:hover { text-decoration: underline; }
+    footer a:focus-visible {
+      outline: 2px solid #2e7d32;
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+    footer .footer-links {
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
 
-    @media (max-width: 600px) {
-      .features-grid { grid-template-columns: 1fr; }
-      .hero { padding: 60px 20px; }
+    /* ===== Responsive ===== */
+    @media (max-width: 768px) {
+      .persona-grid {
+        grid-template-columns: 1fr;
+      }
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+      .hero {
+        padding: 60px 20px;
+      }
+      .floating-cta {
+        display: block;
+      }
+      .phone-mockup {
+        flex: 0 0 200px;
+      }
+      .phone-frame {
+        width: 200px;
+        height: 350px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .phone-mockup {
+        flex: 0 0 180px;
+      }
+      .phone-frame {
+        width: 180px;
+        height: 316px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .cta-btn,
+      .feature-card,
+      .persona-card,
+      .floating-cta,
+      .faq-item summary::after,
+      .lang-toggle button {
+        transition: none;
+      }
+      .cta-btn:hover,
+      .feature-card:hover,
+      .persona-card:hover {
+        transform: none;
+      }
     }
   </style>
 </head>
 <body>
 
-<div class="lang-toggle">
-  <button class="active" id="btn-ja" onclick="toggleLang()">JP</button>
-  <button id="btn-en" onclick="toggleLang()">EN</button>
+<a href="#main-content" class="skip-link">
+  <span class="jp">本文へスキップ</span>
+  <span class="en">Skip to main content</span>
+</a>
+
+<div class="lang-toggle" role="group" aria-label="Language">
+  <button class="active" id="btn-ja" type="button" aria-pressed="true">JP</button>
+  <button id="btn-en" type="button" aria-pressed="false">EN</button>
 </div>
 
-<!-- Hero -->
-<section class="hero">
-  <div class="hero-icon">&#x1F91D;</div>
+<main id="main-content">
+
+<!-- ===== Hero ===== -->
+<section class="hero" id="hero">
+  <div class="hero-icon" aria-hidden="true">&#x1F91D;</div>
   <div class="badge">
-    <span class="jp">&#x1F4F1; Android Beta Tester &#x52DF;&#x96C6;&#x4E2D;</span>
-    <span class="en">&#x1F4F1; Looking for Android Beta Testers</span>
+    <span class="jp">Early Access テスター募集中</span>
+    <span class="en">Now Recruiting Early Access Testers</span>
   </div>
   <h1>
-    <span class="jp"><span class="gradient">&#x5BB6;&#x65CF;&#x3067;&#x3064;&#x306A;&#x304C;&#x308B;&#x3001;</span><br><span class="gradient">&#x4ECB;&#x8B77;&#x306E;&#x8A18;&#x9332;&#x30A2;&#x30D7;&#x30EA;</span></span>
-    <span class="en"><span class="gradient">Care Together.</span><br><span class="gradient">Record Everything.</span></span>
+    <span class="jp"><span class="gradient">介護の記録、</span><br><span class="gradient">もう一人で抱えない。</span></span>
+    <span class="en"><span class="gradient">Caregiving records,</span><br><span class="gradient">no longer alone.</span></span>
   </h1>
   <p class="subtitle">
-    <span class="jp">&#x670D;&#x85AC;&#x7BA1;&#x7406;&#x3001;&#x5065;&#x5EB7;&#x8A18;&#x9332;&#x3001;&#x4E88;&#x5B9A;&#x3001;&#x30BF;&#x30B9;&#x30AF;&#x3001;&#x7533;&#x3057;&#x9001;&#x308A;&#x2015;&#x2015;<br>&#x5BB6;&#x65CF;&#x307F;&#x3093;&#x306A;&#x3067;&#x5171;&#x6709;&#x3067;&#x304D;&#x308B;&#x4ECB;&#x8B77;&#x8A18;&#x9332;&#x30A2;&#x30D7;&#x30EA;&#x300C;&#x30B1;&#x30A2;&#x306E;&#x3066;&#x300D;</span>
-    <span class="en">Medication tracking, health records, schedules, tasks, and care notes&#x2014;<br>a family care recording app that keeps everyone connected.</span>
+    <span class="jp">服薬・健康・予定・タスク・申し送り——<br>家族みんなで共有できる介護記録アプリ「ケアのて」</span>
+    <span class="en">Medication, health, schedules, tasks, and care notes—<br>CareNote keeps your whole family connected.</span>
   </p>
-  <a class="cta-btn" id="cta-hero"
-     href="https://mail.google.com/mail/?view=cm&to=support-carenote@ks-apps.org&su=Beta%20Tester%E5%8F%82%E5%8A%A0%E5%B8%8C%E6%9C%9B&body=Beta%E3%83%86%E3%82%B9%E3%82%BF%E3%83%BC%E3%81%AB%E5%8F%82%E5%8A%A0%E5%B8%8C%E6%9C%9B%E3%81%97%E3%81%BE%E3%81%99%E3%80%82%0A%0AGmail%E3%82%A2%E3%83%89%E3%83%AC%E3%82%B9%3A%20"
-     target="_blank" rel="noopener">
-    <span class="jp">&#x2709;&#xFE0F; Beta&#x30C6;&#x30B9;&#x30BF;&#x30FC;&#x306B;&#x53C2;&#x52A0;&#x3059;&#x308B;</span>
-    <span class="en">&#x2709;&#xFE0F; Join the Beta Test</span>
+  <a class="cta-btn" id="cta-hero" href="https://forms.gle/YOUR_FORM_ID" target="_blank" rel="noopener">
+    <span class="jp">Early Access に参加する &#x2192;</span>
+    <span class="en">Join Early Access &#x2192;</span>
   </a>
+  <p class="cta-note">
+    <span class="jp">無料・Gmailアカウントが必要です</span>
+    <span class="en">Free · Requires a Gmail account</span>
+  </p>
 </section>
 
-<!-- Features -->
+<!-- ===== Persona ===== -->
+<section class="persona">
+  <h2 class="section-heading">
+    <span class="jp">こんな方におすすめ</span>
+    <span class="en">Who It's For</span>
+  </h2>
+  <div class="persona-grid">
+    <div class="persona-card">
+      <div class="persona-emoji" aria-hidden="true">&#x1F468;&#x200D;&#x1F469;&#x200D;&#x1F467;</div>
+      <p>
+        <span class="jp">離れて暮らす親の介護を分担している家族</span>
+        <span class="en">Families sharing care for aging parents from a distance</span>
+      </p>
+    </div>
+    <div class="persona-card">
+      <div class="persona-emoji" aria-hidden="true">&#x1F48A;</div>
+      <p>
+        <span class="jp">薬の飲み忘れが心配な方</span>
+        <span class="en">Anyone worried about missed medications</span>
+      </p>
+    </div>
+    <div class="persona-card">
+      <div class="persona-emoji" aria-hidden="true">&#x1F4CB;</div>
+      <p>
+        <span class="jp">通院・訪問看護の予定が多い介護者</span>
+        <span class="en">Caregivers juggling hospital visits and home nursing schedules</span>
+      </p>
+    </div>
+    <div class="persona-card">
+      <div class="persona-emoji" aria-hidden="true">&#x1F3E5;</div>
+      <p>
+        <span class="jp">ケアマネや訪問看護師と情報共有したい方</span>
+        <span class="en">Those wanting to share info with care managers and nurses</span>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Screenshots ===== -->
+<!-- Replace with actual screenshot images -->
+<section class="screenshots">
+  <div class="screenshots-inner">
+    <h2 class="section-heading">
+      <span class="jp">アプリ画面</span>
+      <span class="en">App Screens</span>
+    </h2>
+    <div class="screenshots-row" role="region" aria-label="App screenshots" tabindex="0">
+      <div class="phone-mockup">
+        <div class="phone-frame">
+          <div class="phone-screen phone-screen-1"></div>
+        </div>
+        <p class="phone-label">
+          <span class="jp">服薬管理</span>
+          <span class="en">Medications</span>
+        </p>
+      </div>
+      <div class="phone-mockup">
+        <div class="phone-frame">
+          <div class="phone-screen phone-screen-2"></div>
+        </div>
+        <p class="phone-label">
+          <span class="jp">健康記録</span>
+          <span class="en">Health Records</span>
+        </p>
+      </div>
+      <div class="phone-mockup">
+        <div class="phone-frame">
+          <div class="phone-screen phone-screen-3"></div>
+        </div>
+        <p class="phone-label">
+          <span class="jp">家族共有</span>
+          <span class="en">Family Sharing</span>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Features (3 Pillars) ===== -->
 <section class="features">
-  <h2>
-    <span class="jp">&#x2728; &#x4E3B;&#x306A;&#x6A5F;&#x80FD;</span>
-    <span class="en">&#x2728; Key Features</span>
+  <h2 class="section-heading">
+    <span class="jp">3つの柱</span>
+    <span class="en">Three Pillars</span>
   </h2>
   <div class="features-grid">
     <div class="feature-card">
-      <div class="icon">&#x1F48A;</div>
+      <div class="icon" aria-hidden="true">&#x1F48A;</div>
       <h3>
-        <span class="jp">&#x670D;&#x85AC;&#x7BA1;&#x7406;</span>
-        <span class="en">Medication Management</span>
+        <span class="jp">記録する</span>
+        <span class="en">Record</span>
       </h3>
       <p>
-        <span class="jp">&#x85AC;&#x306E;&#x767B;&#x9332;&#x3001;&#x30EA;&#x30DE;&#x30A4;&#x30F3;&#x30C0;&#x30FC;&#x901A;&#x77E5;&#x3001;&#x670D;&#x85AC;&#x8A18;&#x9332;&#x3002;&#x98F2;&#x3093;&#x3060;&#x30FB;&#x98F2;&#x3081;&#x306A;&#x304B;&#x3063;&#x305F;&#x30FB;&#x5F8C;&#x3067;&#x901A;&#x77E5;&#x306E;3&#x3064;&#x304B;&#x3089;&#x9078;&#x3076;&#x3060;&#x3051;&#x3002;&#x5199;&#x771F;&#x3082;&#x6DFB;&#x4ED8;&#x53EF;&#x80FD;&#x3002;</span>
-        <span class="en">Register medications, get reminders, and record intake. Simple 3-choice recording: taken, skipped, or remind later. Photo attachment supported.</span>
+        <span class="jp">服薬、体温、血圧、食事、排泄——日々のケア記録をタップ数回で。グラフで変化を可視化。</span>
+        <span class="en">Medications, temperature, blood pressure, meals, and more—record daily care in just a few taps. Visualize trends with graphs.</span>
       </p>
     </div>
     <div class="feature-card">
-      <div class="icon">&#x1F321;&#xFE0F;</div>
+      <div class="icon" aria-hidden="true">&#x1F4C5;</div>
       <h3>
-        <span class="jp">&#x5065;&#x5EB7;&#x8A18;&#x9332;</span>
-        <span class="en">Health Records</span>
+        <span class="jp">管理する</span>
+        <span class="en">Manage</span>
       </h3>
       <p>
-        <span class="jp">&#x4F53;&#x6E29;&#x3001;&#x8840;&#x5727;&#x3001;&#x8108;&#x62CD;&#x3001;&#x4F53;&#x91CD;&#x3001;&#x98DF;&#x4E8B;&#x91CF;&#x3001;&#x6392;&#x6CC4;&#x3001;&#x4F53;&#x8ABF;&#x30E1;&#x30E2;&#x3002;&#x8A18;&#x9332;&#x3057;&#x305F;&#x3044;&#x9805;&#x76EE;&#x3060;&#x3051;&#x3067;OK&#x3002;&#x30B0;&#x30E9;&#x30D5;&#x3067;&#x5909;&#x5316;&#x304C;&#x898B;&#x3048;&#x308B;&#x3002;</span>
-        <span class="en">Temperature, blood pressure, pulse, weight, meals, excretion, and condition notes. Record only what you need. Track changes with graphs.</span>
+        <span class="jp">通院、デイサービス、タスクを一元管理。リマインダー通知で忘れない。担当者アサインで分担。</span>
+        <span class="en">Hospital visits, day services, and tasks in one place. Reminders keep you on track. Assign responsibilities to share the load.</span>
       </p>
     </div>
     <div class="feature-card">
-      <div class="icon">&#x1F4C5;</div>
+      <div class="icon" aria-hidden="true">&#x1F468;&#x200D;&#x1F469;&#x200D;&#x1F467;</div>
       <h3>
-        <span class="jp">&#x30AB;&#x30EC;&#x30F3;&#x30C0;&#x30FC;</span>
-        <span class="en">Calendar</span>
+        <span class="jp">共有する</span>
+        <span class="en">Share</span>
       </h3>
       <p>
-        <span class="jp">&#x901A;&#x9662;&#x3001;&#x8A2A;&#x554F;&#x770B;&#x8B77;&#x3001;&#x30C7;&#x30A4;&#x30B5;&#x30FC;&#x30D3;&#x30B9;&#x306A;&#x3069;&#x306E;&#x4E88;&#x5B9A;&#x3092;&#x4E00;&#x5143;&#x7BA1;&#x7406;&#x3002;&#x7E70;&#x308A;&#x8FD4;&#x3057;&#x8A2D;&#x5B9A;&#x3084;&#x62C5;&#x5F53;&#x8005;&#x30A2;&#x30B5;&#x30A4;&#x30F3;&#x3082;&#x53EF;&#x80FD;&#x3002;</span>
-        <span class="en">Manage hospital visits, home nursing, day services, and more in one place. Supports recurring events and assignees.</span>
-      </p>
-    </div>
-    <div class="feature-card">
-      <div class="icon">&#x2705;</div>
-      <h3>
-        <span class="jp">&#x30BF;&#x30B9;&#x30AF;&#x7BA1;&#x7406;</span>
-        <span class="en">Task Management</span>
-      </h3>
-      <p>
-        <span class="jp">&#x300C;&#x85AC;&#x3092;&#x53D7;&#x3051;&#x53D6;&#x308B;&#x300D;&#x300C;&#x30B7;&#x30FC;&#x30C4;&#x4EA4;&#x63DB;&#x300D;&#x306A;&#x3069;&#x3001;&#x5BB6;&#x65CF;&#x3067;&#x5206;&#x62C5;&#x3002;&#x62C5;&#x5F53;&#x8005;&#x3092;&#x6C7A;&#x3081;&#x3066;&#x3001;&#x5B8C;&#x4E86;&#x3057;&#x305F;&#x3089;&#x5199;&#x771F;&#x3067;&#x5831;&#x544A;&#x3002;</span>
-        <span class="en">Share tasks like picking up prescriptions or changing sheets among family. Assign responsibilities and report completion with photos.</span>
-      </p>
-    </div>
-    <div class="feature-card">
-      <div class="icon">&#x1F4DD;</div>
-      <h3>
-        <span class="jp">&#x30E1;&#x30E2;&#x30FB;&#x7533;&#x3057;&#x9001;&#x308A;</span>
-        <span class="en">Care Notes</span>
-      </h3>
-      <p>
-        <span class="jp">&#x6C17;&#x3065;&#x3044;&#x305F;&#x3053;&#x3068;&#x3092;&#x5199;&#x771F;&#x4ED8;&#x304D;&#x3067;&#x5171;&#x6709;&#x3002;&#x30BF;&#x30B0;&#x4ED8;&#x3051;&#x3001;&#x30B3;&#x30E1;&#x30F3;&#x30C8;&#x6A5F;&#x80FD;&#x3067;&#x5BB6;&#x65CF;&#x9593;&#x306E;&#x7533;&#x3057;&#x9001;&#x308A;&#x306B;&#x3002;</span>
-        <span class="en">Share observations with photos. Use tags and comments for seamless family communication and care handoffs.</span>
-      </p>
-    </div>
-    <div class="feature-card">
-      <div class="icon">&#x1F46A;</div>
-      <h3>
-        <span class="jp">&#x5BB6;&#x65CF;&#x5171;&#x6709;</span>
-        <span class="en">Family Sharing</span>
-      </h3>
-      <p>
-        <span class="jp">&#x5BB6;&#x65CF;&#x30E1;&#x30F3;&#x30D0;&#x30FC;&#x3092;&#x62DB;&#x5F85;&#x3057;&#x3066;&#x5168;&#x54E1;&#x3067;&#x8A18;&#x9332;&#x3092;&#x5171;&#x6709;&#x3002;&#x8A2A;&#x554F;&#x770B;&#x8B77;&#x5E2B;&#x306A;&#x3069;&#x5916;&#x90E8;&#x30B9;&#x30BF;&#x30C3;&#x30D5;&#x306E;&#x62DB;&#x5F85;&#x3082;&#x5BFE;&#x5FDC;&#x3002;</span>
-        <span class="en">Invite family members to share all records. External staff (home nurses, etc.) can also be invited with limited permissions.</span>
+        <span class="jp">家族を招待して全員で記録を共有。申し送りメモで引き継ぎもスムーズ。写真添付で状況を伝える。</span>
+        <span class="en">Invite family to share all records. Handoff notes keep everyone informed. Attach photos to show conditions clearly.</span>
       </p>
     </div>
   </div>
 </section>
 
-<!-- Benefits -->
+<!-- ===== Benefits ===== -->
 <section class="benefits">
   <div class="benefits-inner">
-    <h2>
-      <span class="jp">&#x1F381; Beta&#x30C6;&#x30B9;&#x30BF;&#x30FC;&#x7279;&#x5178;</span>
-      <span class="en">&#x1F381; Beta Tester Benefits</span>
+    <h2 class="section-heading">
+      <span class="jp">Early Access 特典</span>
+      <span class="en">Early Access Benefits</span>
     </h2>
     <div class="benefit-item">
-      <div class="check">&#x2B50;</div>
+      <div class="check" aria-hidden="true">&#x2B50;</div>
       <div>
         <h3>
-          <span class="jp">&#x30D7;&#x30EC;&#x30DF;&#x30A2;&#x30E0;&#x7121;&#x6599;</span>
+          <span class="jp">プレミアム無料</span>
           <span class="en">Free Premium</span>
         </h3>
         <p>
-          <span class="jp">Beta&#x671F;&#x9593;&#x4E2D;&#x306F;&#x5168;&#x3066;&#x306E;&#x30D7;&#x30EC;&#x30DF;&#x30A2;&#x30E0;&#x6A5F;&#x80FD;&#xFF08;&#x7121;&#x5236;&#x9650;&#x30C7;&#x30FC;&#x30BF;&#x4FDD;&#x5B58;&#x3001;PDF&#x51FA;&#x529B;&#x3001;&#x5916;&#x90E8;&#x30AB;&#x30EC;&#x30F3;&#x30C0;&#x30FC;&#x540C;&#x671F;&#x7B49;&#xFF09;&#x304C;&#x7121;&#x6599;&#x3067;&#x4F7F;&#x3048;&#x307E;&#x3059;&#x3002;</span>
-          <span class="en">All premium features (unlimited data retention, PDF export, external calendar sync, etc.) are free during the beta period.</span>
+          <span class="jp">Early Access期間中はすべてのプレミアム機能（無制限データ保存、PDFエクスポート、外部カレンダー同期等）が無料で使えます。</span>
+          <span class="en">All premium features (unlimited data retention, PDF export, external calendar sync, etc.) are free during the Early Access period.</span>
         </p>
       </div>
     </div>
     <div class="benefit-item">
-      <div class="check">&#x1F6E0;&#xFE0F;</div>
+      <div class="check" aria-hidden="true">&#x1F6E0;&#xFE0F;</div>
       <div>
         <h3>
-          <span class="jp">&#x958B;&#x767A;&#x306B;&#x53C2;&#x52A0;</span>
+          <span class="jp">開発に参加</span>
           <span class="en">Shape the Product</span>
         </h3>
         <p>
-          <span class="jp">&#x3042;&#x306A;&#x305F;&#x306E;&#x30D5;&#x30A3;&#x30FC;&#x30C9;&#x30D0;&#x30C3;&#x30AF;&#x304C;&#x76F4;&#x63A5;&#x6A5F;&#x80FD;&#x306B;&#x53CD;&#x6620;&#x3055;&#x308C;&#x307E;&#x3059;&#x3002;&#x4ECB;&#x8B77;&#x306E;&#x73FE;&#x5834;&#x3067;&#x672C;&#x5F53;&#x306B;&#x5F79;&#x7ACB;&#x3064;&#x30A2;&#x30D7;&#x30EA;&#x3092;&#x4E00;&#x7DD2;&#x306B;&#x4F5C;&#x308A;&#x307E;&#x3057;&#x3087;&#x3046;&#x3002;</span>
+          <span class="jp">あなたのフィードバックが直接機能に反映されます。介護の現場で本当に役立つアプリを一緒に作りましょう。</span>
           <span class="en">Your feedback directly influences what gets built. Help us create an app that truly serves real caregiving needs.</span>
         </p>
       </div>
     </div>
     <div class="benefit-item">
-      <div class="check">&#x1F4AC;</div>
+      <div class="check" aria-hidden="true">&#x1F4AC;</div>
       <div>
         <h3>
-          <span class="jp">&#x958B;&#x767A;&#x8005;&#x3068;&#x76F4;&#x63A5;&#x9023;&#x7D61;</span>
+          <span class="jp">開発者と直接連絡</span>
           <span class="en">Direct Developer Contact</span>
         </h3>
         <p>
-          <span class="jp">&#x500B;&#x4EBA;&#x958B;&#x767A;&#x306A;&#x306E;&#x3067;&#x3001;&#x958B;&#x767A;&#x8005;&#x3068;&#x76F4;&#x63A5;&#x3084;&#x308A;&#x53D6;&#x308A;&#x3067;&#x304D;&#x307E;&#x3059;&#x3002;&#x4E0D;&#x5177;&#x5408;&#x5831;&#x544A;&#x3084;&#x8981;&#x671B;&#x3082;&#x3059;&#x3050;&#x306B;&#x5BFE;&#x5FDC;&#x3002;</span>
+          <span class="jp">個人開発なので、開発者と直接やり取りできます。不具合報告や要望もすぐに対応。</span>
           <span class="en">As a solo developer, I communicate directly with testers. Bug reports and feature requests get immediate attention.</span>
         </p>
       </div>
@@ -492,107 +816,214 @@
   </div>
 </section>
 
-<!-- How to Join -->
+<!-- ===== How to Join ===== -->
 <section class="how-to">
-  <h2>
-    <span class="jp">&#x1F680; &#x53C2;&#x52A0;&#x65B9;&#x6CD5;</span>
-    <span class="en">&#x1F680; How to Join</span>
+  <h2 class="section-heading">
+    <span class="jp">参加方法</span>
+    <span class="en">How to Join</span>
   </h2>
   <div class="steps">
     <div class="step">
-      <div class="step-num">1</div>
+      <div class="step-num" aria-hidden="true">1</div>
       <div class="step-content">
         <h3>
-          <span class="jp">Gmail&#x30A2;&#x30C9;&#x30EC;&#x30B9;&#x3092;&#x9001;&#x4FE1;</span>
-          <span class="en">Send Your Gmail Address</span>
+          <span class="jp">フォームに登録</span>
+          <span class="en">Fill Out the Form</span>
         </h3>
         <p>
-          <span class="jp"><code>support-carenote@ks-apps.org</code> &#x306B;Gmail&#x30A2;&#x30C9;&#x30EC;&#x30B9;&#x3092;&#x304A;&#x9001;&#x308A;&#x304F;&#x3060;&#x3055;&#x3044;&#x3002;</span>
-          <span class="en">Email your Gmail address to <code>support-carenote@ks-apps.org</code></span>
+          <span class="jp">下のボタンからGmailアドレスを登録してください。</span>
+          <span class="en">Register your Gmail address using the button below.</span>
         </p>
       </div>
     </div>
     <div class="step">
-      <div class="step-num">2</div>
+      <div class="step-num" aria-hidden="true">2</div>
       <div class="step-content">
         <h3>
-          <span class="jp">&#x62DB;&#x5F85;&#x3092;&#x53D7;&#x3051;&#x53D6;&#x308B;</span>
-          <span class="en">Receive Your Invite</span>
+          <span class="jp">招待を受け取る</span>
+          <span class="en">Get Your Invite</span>
         </h3>
         <p>
-          <span class="jp">24&#x6642;&#x9593;&#x4EE5;&#x5185;&#x306B;Google Play&#x306E;Beta&#x30C6;&#x30B9;&#x30C8;&#x3078;&#x306E;&#x62DB;&#x5F85;&#x3092;&#x304A;&#x9001;&#x308A;&#x3057;&#x307E;&#x3059;&#x3002;</span>
-          <span class="en">You'll receive an invitation to the Google Play beta test within 24 hours.</span>
+          <span class="jp">24時間以内にGoogle Playのテスト招待をお送りします。</span>
+          <span class="en">You'll receive a Google Play test invitation within 24 hours.</span>
         </p>
       </div>
     </div>
     <div class="step">
-      <div class="step-num">3</div>
+      <div class="step-num" aria-hidden="true">3</div>
       <div class="step-content">
         <h3>
-          <span class="jp">&#x30A4;&#x30F3;&#x30B9;&#x30C8;&#x30FC;&#x30EB; &amp; &#x30D5;&#x30A3;&#x30FC;&#x30C9;&#x30D0;&#x30C3;&#x30AF;</span>
-          <span class="en">Install &amp; Give Feedback</span>
+          <span class="jp">インストール＆フィードバック</span>
+          <span class="en">Install & Share Feedback</span>
         </h3>
         <p>
-          <span class="jp">&#x30A2;&#x30D7;&#x30EA;&#x3092;&#x30A4;&#x30F3;&#x30B9;&#x30C8;&#x30FC;&#x30EB;&#x3057;&#x3066;&#x3001;&#x65E5;&#x3005;&#x306E;&#x4ECB;&#x8B77;&#x8A18;&#x9332;&#x306B;&#x304A;&#x4F7F;&#x3044;&#x304F;&#x3060;&#x3055;&#x3044;&#x3002;&#x30D5;&#x30A3;&#x30FC;&#x30C9;&#x30D0;&#x30C3;&#x30AF;&#x3092;&#x304A;&#x5F85;&#x3061;&#x3057;&#x3066;&#x3044;&#x307E;&#x3059;&#xFF01;</span>
-          <span class="en">Install the app and use it for your daily care recording. We look forward to your feedback!</span>
+          <span class="jp">アプリを使って、感想をお聞かせください！</span>
+          <span class="en">Start using the app and let us know what you think!</span>
         </p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Final CTA -->
+<!-- ===== FAQ ===== -->
+<section class="faq">
+  <div class="faq-inner">
+    <h2 class="section-heading">
+      <span class="jp">よくある質問</span>
+      <span class="en">FAQ</span>
+    </h2>
+
+    <details class="faq-item">
+      <summary>
+        <span>
+          <span class="jp">無料ですか？</span>
+          <span class="en">Is it free?</span>
+        </span>
+      </summary>
+      <div class="faq-answer">
+        <span class="jp">はい。Early Access期間中はプレミアム機能を含め全て無料です。正式リリース後も基本機能は無料で提供予定です。</span>
+        <span class="en">Yes. All features, including premium, are free during Early Access. Basic features will remain free after official launch.</span>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary>
+        <span>
+          <span class="jp">データはどうなりますか？</span>
+          <span class="en">What happens to my data?</span>
+        </span>
+      </summary>
+      <div class="faq-answer">
+        <span class="jp">データはFirebaseに暗号化保存され、端末内のデータベースも暗号化されています。Early Accessからそのまま正式版に移行でき、データは引き継がれます。</span>
+        <span class="en">Data is encrypted both in Firebase and on your device (SQLCipher). Your data carries over seamlessly from Early Access to the official release.</span>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary>
+        <span>
+          <span class="jp">どんな権限が必要ですか？</span>
+          <span class="en">What permissions does it need?</span>
+        </span>
+      </summary>
+      <div class="faq-answer">
+        <span class="jp">通知（リマインダー用）とカメラ/ストレージ（写真添付用）のみ。位置情報や連絡先へのアクセスは一切不要です。</span>
+        <span class="en">Only notifications (for reminders) and camera/storage (for photo attachments). No access to location or contacts required.</span>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary>
+        <span>
+          <span class="jp">なぜGmailが必要なの？</span>
+          <span class="en">Why is Gmail required?</span>
+        </span>
+      </summary>
+      <div class="faq-answer">
+        <span class="jp">Google Playのクローズドテスト配信にはGoogleアカウントが必要なためです。アプリ内のログインはメールアドレスなら何でもOKです。</span>
+        <span class="en">Google Play's closed testing requires a Google account for app distribution. You can use any email to log into the app itself.</span>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary>
+        <span>
+          <span class="jp">途中でやめられますか？</span>
+          <span class="en">Can I leave the test?</span>
+        </span>
+      </summary>
+      <div class="faq-answer">
+        <span class="jp">いつでもアプリをアンインストールするだけで退出できます。データ削除をご希望の場合はお問い合わせください。</span>
+        <span class="en">Simply uninstall the app anytime. Contact us if you'd like your data deleted.</span>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- ===== Final CTA ===== -->
 <section class="final-cta">
   <h2>
-    <span class="jp">&#x4E00;&#x7DD2;&#x306B;&#x3001;&#x4ECB;&#x8B77;&#x3092;&#x3082;&#x3063;&#x3068;&#x3089;&#x304F;&#x306B;&#x3002;</span>
+    <span class="jp">一緒に、介護をもっとらくに。</span>
     <span class="en">Let's make caregiving easier, together.</span>
   </h2>
   <p class="counter">
-    <span class="jp">&#x1F4E3; Beta&#x30C6;&#x30B9;&#x30BF;&#x30FC; 20&#x540D;&#x52DF;&#x96C6;&#x4E2D;</span>
-    <span class="en">&#x1F4E3; Looking for 20 beta testers</span>
+    <span class="jp">Early Access テスター 20名募集中</span>
+    <span class="en">Now recruiting 20 Early Access testers</span>
   </p>
-  <a class="cta-btn" id="cta-bottom"
-     href="https://mail.google.com/mail/?view=cm&to=support-carenote@ks-apps.org&su=Beta%20Tester%E5%8F%82%E5%8A%A0%E5%B8%8C%E6%9C%9B&body=Beta%E3%83%86%E3%82%B9%E3%82%BF%E3%83%BC%E3%81%AB%E5%8F%82%E5%8A%A0%E5%B8%8C%E6%9C%9B%E3%81%97%E3%81%BE%E3%81%99%E3%80%82%0A%0AGmail%E3%82%A2%E3%83%89%E3%83%AC%E3%82%B9%3A%20"
-     target="_blank" rel="noopener">
-    <span class="jp">&#x2709;&#xFE0F; Beta&#x30C6;&#x30B9;&#x30BF;&#x30FC;&#x306B;&#x53C2;&#x52A0;&#x3059;&#x308B;</span>
-    <span class="en">&#x2709;&#xFE0F; Join the Beta Test</span>
+  <a class="cta-btn" id="cta-bottom" href="https://forms.gle/YOUR_FORM_ID" target="_blank" rel="noopener">
+    <span class="jp">Early Access に参加する &#x2192;</span>
+    <span class="en">Join Early Access &#x2192;</span>
   </a>
 </section>
 
+</main>
+
+<!-- ===== Floating CTA (mobile) ===== -->
+<div class="floating-cta" id="floating-cta" aria-hidden="true">
+  <a class="cta-btn" href="https://forms.gle/YOUR_FORM_ID" target="_blank" rel="noopener">
+    <span class="jp">Early Access に参加 &#x2192;</span>
+    <span class="en">Join Early Access &#x2192;</span>
+  </a>
+</div>
+
+<!-- ===== Footer ===== -->
 <footer>
-  <p>&copy; 2026 CareNote</p>
-  <p><a href="mailto:support-carenote@ks-apps.org">support-carenote@ks-apps.org</a></p>
+  <p>&copy; 2026 CareNote (ケアのて)</p>
+  <div class="footer-links">
+    <a href="privacy-policy.html">
+      <span class="jp">プライバシーポリシー</span>
+      <span class="en">Privacy Policy</span>
+    </a>
+    <span>support-carenote@ks-apps.org</span>
+  </div>
 </footer>
 
 <script>
-var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-var emailUrls = {
-  ja: {
-    gmail: 'https://mail.google.com/mail/?view=cm&to=support-carenote@ks-apps.org&su=Beta%20Tester%E5%8F%82%E5%8A%A0%E5%B8%8C%E6%9C%9B&body=Beta%E3%83%86%E3%82%B9%E3%82%BF%E3%83%BC%E3%81%AB%E5%8F%82%E5%8A%A0%E5%B8%8C%E6%9C%9B%E3%81%97%E3%81%BE%E3%81%99%E3%80%82%0A%0AGmail%E3%82%A2%E3%83%89%E3%83%AC%E3%82%B9%3A%20',
-    mailto: 'mailto:support-carenote@ks-apps.org?subject=Beta%20Tester%E5%8F%82%E5%8A%A0%E5%B8%8C%E6%9C%9B&body=Beta%E3%83%86%E3%82%B9%E3%82%BF%E3%83%BC%E3%81%AB%E5%8F%82%E5%8A%A0%E5%B8%8C%E6%9C%9B%E3%81%97%E3%81%BE%E3%81%99%E3%80%82%0A%0AGmail%E3%82%A2%E3%83%89%E3%83%AC%E3%82%B9%3A%20'
-  },
-  en: {
-    gmail: 'https://mail.google.com/mail/?view=cm&to=support-carenote@ks-apps.org&su=CareNote%20Beta%20Tester%20Signup&body=Hi!%20I%27d%20like%20to%20join%20the%20CareNote%20beta%20test.%0A%0AMy%20Gmail%20address%20for%20Google%20Play%3A%20',
-    mailto: 'mailto:support-carenote@ks-apps.org?subject=CareNote%20Beta%20Tester%20Signup&body=Hi!%20I%27d%20like%20to%20join%20the%20CareNote%20beta%20test.%0A%0AMy%20Gmail%20address%20for%20Google%20Play%3A%20'
+(function() {
+  'use strict';
+
+  /* --- Language Toggle --- */
+  var btnJa = document.getElementById('btn-ja');
+  var btnEn = document.getElementById('btn-en');
+
+  function toggleLang() {
+    var isCurrentlyEn = document.body.classList.contains('lang-en');
+    document.body.classList.toggle('lang-en');
+    var isNowEn = !isCurrentlyEn;
+    btnJa.classList.toggle('active', !isNowEn);
+    btnEn.classList.toggle('active', isNowEn);
+    btnJa.setAttribute('aria-pressed', String(!isNowEn));
+    btnEn.setAttribute('aria-pressed', String(isNowEn));
+    document.documentElement.lang = isNowEn ? 'en' : 'ja';
   }
-};
 
-function updateCtaLinks() {
-  var isEn = document.body.classList.contains('lang-en');
-  var lang = isEn ? 'en' : 'ja';
-  var href = isMobile ? emailUrls[lang].mailto : emailUrls[lang].gmail;
-  document.getElementById('cta-hero').href = href;
-  document.getElementById('cta-bottom').href = href;
-}
+  btnJa.addEventListener('click', function() {
+    if (document.body.classList.contains('lang-en')) toggleLang();
+  });
+  btnEn.addEventListener('click', function() {
+    if (!document.body.classList.contains('lang-en')) toggleLang();
+  });
 
-function toggleLang() {
-  document.body.classList.toggle('lang-en');
-  document.getElementById('btn-ja').classList.toggle('active');
-  document.getElementById('btn-en').classList.toggle('active');
-  updateCtaLinks();
-}
+  /* --- Floating CTA via IntersectionObserver --- */
+  var heroCta = document.getElementById('cta-hero');
+  var floatingCta = document.getElementById('floating-cta');
 
-updateCtaLinks();
+  if (heroCta && floatingCta && 'IntersectionObserver' in window) {
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        var isHidden = entry.isIntersecting;
+        floatingCta.classList.toggle('visible', !isHidden);
+        floatingCta.setAttribute('aria-hidden', String(isHidden));
+      });
+    }, { threshold: 0 });
+    observer.observe(heroCta);
+  }
+
+  /* --- prefers-reduced-motion check --- */
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.documentElement.style.scrollBehavior = 'auto';
+  }
+})();
 </script>
 
 </body>
